@@ -10,7 +10,8 @@
 <?import javafx.scene.layout.VBox?>
 
 <AnchorPane xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.example.sort.Controller">
+            fx:controller="com.example.sort.MainController"
+            stylesheets="@style.css">
 
     <padding>
         <Insets top="20" right="20" bottom="20" left="20"/>

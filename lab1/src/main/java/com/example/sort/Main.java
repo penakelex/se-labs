@@ -10,36 +10,16 @@ import java.io.IOException;
 
 public class Main extends Application {
 
-    private static Scene scene;
-
-    public static int[] array;
 
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("menu_view.fxml"));
-        scene = new Scene(fxmlLoader.load(), 1000, 700);
+        Scene scene = new Scene(fxmlLoader.load(), 1000, 700);
         stage.setTitle("Sort");
         stage.setScene(scene);
         stage.show();
     }
 
-    public static void setRoot(String fxml) throws IOException {
-        scene.setRoot(loadFXML(fxml));
-    }
-
-    private static Parent loadFXML(String fxml) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource(fxml + ".fxml"));
-        return fxmlLoader.load();
-    }
-
-    public static void setArray(int[] buf) {
-        array = buf;
-    }
-
-    public static int[] getArray()
-    {
-        return array;
-    }
 
     public static void main(String[] args) {
         launch();

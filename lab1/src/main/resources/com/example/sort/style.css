@@ -1,0 +1,14 @@
+.sort-element {
+    -fx-padding: 0;
+    -fx-background-color: #ffffff;
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 4px;
+}
+
+.sort-element-highlighted {
+    -fx-padding: 0;
+    -fx-background-color: #93c5fd; /* Светло-синий/голубой */
+    -fx-border-color: #2563eb;
+    -fx-border-radius: 4px;
+}
+

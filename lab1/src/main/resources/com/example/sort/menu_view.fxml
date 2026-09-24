@@ -30,7 +30,6 @@
             </font>
         </Label>
 
-            <!-- Параметры слева -->
         <HBox alignment="CENTER"
               spacing="100">
 

@@ -2,6 +2,8 @@ package com.example.sort;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
@@ -29,66 +31,51 @@ public class MenuController {
     private int[] inputArray;
 
     public void start(ActionEvent actionEvent) throws IOException {
-        if (inputArray == null ||inputArray.length==0)
-        {
+        if (inputArray == null || inputArray.length == 0) {
             ErrorMessage.show("Введите массив");
+            return;
         }
-        else {
-            Main.setArray(inputArray);
-            Main.setRoot("main_view");
-        }
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("main_view.fxml"));
+        Parent root = loader.load();
+
+        MainController controller = loader.getController();
+        controller.setArrayData(inputArray);
+
+        javafx.scene.Node source = (javafx.scene.Node) actionEvent.getSource();
+        source.getScene().setRoot(root);
     }
 
     public void generateArray(ActionEvent actionEvent) {
         try {
             int size = Integer.parseInt(countField.getText());
-            int interval_1 = Integer.parseInt(small_num.getText());
-            int interval_2 = Integer.parseInt(big_num.getText());
+            int min = Integer.parseInt(small_num.getText());
+            int max = Integer.parseInt(big_num.getText());
 
-            if (size <= 0 || interval_1 > interval_2) {
+            if (size <= 0 || min > max) {
                 ErrorMessage.show("Некорректный интервал или размер");
                 return;
             }
 
-            int[] array = new int[size];
-            Random random = new Random();
-
-            for (int i = 0; i < array.length; i++) {
-                array[i] = random.nextInt(interval_1, interval_2 + 1);
-            }
-
-            inputArray = Arrays.copyOf(array, array.length);
-            myArray.setText(strArray(inputArray));
+            inputArray = new Random().ints(size, min, max + 1).toArray();
+            myArray.setText(Arrays.toString(inputArray));
 
         } catch (NumberFormatException e) {
             ErrorMessage.show("Заполните все поля числами");
         }
     }
 
-    public void clickOnInput(ActionEvent actionEvent)
-    {
-        String str = array.getText();
+    public void clickOnInput(ActionEvent actionEvent) {
         try {
-            String buff = str.replaceAll("\\s+", "");
-            String[] arr = buff.split(",");
-
-            int[] result = Arrays.stream(arr)
+            inputArray = Arrays.stream(array.getText().split(","))
+                    .map(String::trim)
+                    .filter(s -> !s.isEmpty())
                     .mapToInt(Integer::parseInt)
                     .toArray();
-            inputArray=java.util.Arrays.copyOf(result, result.length);
 
-            myArray.setText(strArray(inputArray));
-
-        } catch (Exception e)
-        {
+            myArray.setText(Arrays.toString(inputArray));
+        } catch (Exception e) {
             ErrorMessage.show("Массив некорректный, введите другой");
         }
     }
-
-    private String strArray(int[] arr)
-    {
-        String result = Arrays.toString(arr);
-        return result;
-    }
-
 }
