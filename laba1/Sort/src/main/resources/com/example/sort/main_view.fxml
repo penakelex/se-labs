@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.sort.Controller">
+
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <VBox spacing="30"
+          AnchorPane.topAnchor="20"
+          AnchorPane.bottomAnchor="20"
+          AnchorPane.leftAnchor="20"
+          AnchorPane.rightAnchor="20">
+
+        <!-- Поле анимации -->
+        <Pane fx:id="animationPane"
+              prefHeight="400"
+              VBox.vgrow="ALWAYS"
+              style="-fx-background-color: #F2F2F2;
+              -fx-border-color: #CCCCCC;
+              -fx-border-width: 1;
+             -fx-border-radius: 8;
+             -fx-background-radius: 8;"/>
+
+
+        <!-- Скорость справа -->
+        <VBox spacing="15"
+              alignment="CENTER">
+
+            <Label text="Скорость:"/>
+
+            <Slider fx:id="speedSlider"
+                    min="0.1"
+                    max="2.0"
+                    value="2.0"
+                    prefWidth="200"
+                    minWidth="200"
+                    maxWidth="200"
+                    showTickLabels="true"
+                    showTickMarks="true"/>
+
+            </VBox>
+
+        <!-- Кнопки снизу по центру -->
+        <HBox alignment="CENTER"
+              spacing="10">
+
+            <Button text="Начать"
+                    onAction="#startSorting"/>
+
+            <Button text="Пауза"
+                    onAction="#pauseSorting"/>
+
+            <Button text="Продолжить"
+                    onAction="#resumeSorting"/>
+
+            <Button text="Вернуться"
+                    onAction="#comeBack"/>
+
+        </HBox>
+
+    </VBox>
+
+</AnchorPane>
