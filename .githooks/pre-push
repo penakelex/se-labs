@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+set -e
+
+echo "[pre-push] Running spotlessCheck and check..."
+./gradlew spotlessCheck check
+
+echo "[pre-push] OK"

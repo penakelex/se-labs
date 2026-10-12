@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.nstu.se.lab1.MenuController"
+            prefHeight="400.0" prefWidth="600.0">
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <VBox spacing="60"
+          alignment="CENTER"
+          AnchorPane.topAnchor="20"
+          AnchorPane.bottomAnchor="20"
+          AnchorPane.leftAnchor="20"
+          AnchorPane.rightAnchor="20">
+
+        <Label text="Введите или сгенерируйте массив">
+            <font>
+                <Font size="16.0" />
+            </font>
+        </Label>
+
+        <HBox alignment="CENTER"
+              spacing="100">
+
+            <VBox spacing="15">
+                <Label text="Введите массив:"/>
+                <TextField fx:id="array" maxWidth="100"/>
+                <Button text="Ввести" onAction="#clickOnInput"/>
+            </VBox>
+
+
+            <VBox spacing="15">
+                <Label text="Сгенерируйте массив:"/>
+                <HBox alignment="CENTER" spacing="15">
+                    <Label text="Количество элементов:"/>
+
+                    <TextField fx:id="countField"
+                               prefWidth="60"
+                               maxWidth="60"/>
+                </HBox>
+
+                <Label text="Диапазон значений:"/>
+
+                <HBox alignment="CENTER" spacing="15">
+
+                    <Label text="От:"/>
+
+                    <TextField fx:id="smallNum"
+                               prefWidth="60"
+                               maxWidth="60"/>
+
+                    <Label text="До:"/>
+
+                    <TextField fx:id="bigNum"
+                               prefWidth="60"
+                               maxWidth="60"/>
+                </HBox>
+                <Button text="Сгенерировать" onAction="#generateArray"/>
+            </VBox>
+
+        </HBox >
+        <VBox spacing="15" alignment="CENTER">
+            <Label text="Ваш массив:">
+                <font>
+                    <Font size="16.0" />
+                </font>
+            </Label>
+            <Label fx:id="myArray">
+                <font>
+                    <Font size="16.0" />
+                </font>
+            </Label>
+            <Button text="Начать" onAction="#start"/>
+        </VBox>
+    </VBox>
+</AnchorPane>

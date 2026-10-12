@@ -1,0 +1,15 @@
+#!/usr/bin/env sh
+set -e
+
+STAGED=$(git diff --cached --name-only --diff-filter=ACM)
+
+echo "[pre-commit] Running spotlessApply..."
+./gradlew spotlessApply --quiet
+
+for f in $STAGED; do
+    if [ -f "$f" ]; then
+        git add "$f"
+    fi
+done
+
+echo "[pre-commit] OK"
