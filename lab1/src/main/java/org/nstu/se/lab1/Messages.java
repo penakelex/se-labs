@@ -1,18 +1,14 @@
 package org.nstu.se.lab1;
 
 import java.text.MessageFormat;
-import java.util.Locale;
 import java.util.ResourceBundle;
 
 public final class Messages {
-    private static final ResourceBundle BUNDLE =
-            ResourceBundle.getBundle("org.nstu.se.lab1.app", Locale.getDefault());
+    public static final String BUNDLE_NAME = "org.nstu.se.lab1.app";
+
+    private static final ResourceBundle BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
 
     private Messages() {}
-
-    public static ResourceBundle bundle() {
-        return BUNDLE;
-    }
 
     public static String get(final String key) {
         return BUNDLE.getString(key);

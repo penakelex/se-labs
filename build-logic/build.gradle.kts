@@ -7,6 +7,18 @@ repositories {
     mavenCentral()
 }
 
+val javaVersion = libs.versions.java.get().toInt()
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(javaVersion)
+    }
+}
+
+kotlin {
+    jvmToolchain(javaVersion)
+}
+
 dependencies {
     implementation(libs.javafx.plugin)
     implementation(libs.spotless.plugin)

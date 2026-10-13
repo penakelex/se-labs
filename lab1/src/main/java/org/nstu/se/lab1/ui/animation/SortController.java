@@ -22,17 +22,10 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 public class SortController implements Initializable {
-    private static final double DEFAULT_PANE_WIDTH = 900.0;
-    private static final double DEFAULT_PANE_HEIGHT = 460.0;
-
-    private static final double BASE_COLUMN_WIDTH = 60.0;
-    private static final double BASE_GAP = 12.0;
-    private static final double BASE_COLUMN_HEIGHT = 380.0;
-
-    private static final double MARGIN = 30.0;
-    private static final double MIN_SCALE = 0.25;
-    private static final double MAX_SCALE = 1.5;
-    private static final double MIN_BAR_HEIGHT = 6.0;
+    private static final String KEY_PLAY = "sort.button.play";
+    private static final String KEY_TOOLTIP_START = "sort.tooltip.start";
+    private static final String KEY_TOOLTIP_PAUSE = "sort.tooltip.pause";
+    private static final String KEY_TOOLTIP_RESUME = "sort.tooltip.resume";
 
     @FXML private Pane animationPane;
     @FXML private Slider speedSlider;
@@ -50,11 +43,7 @@ public class SortController implements Initializable {
         collapseWhenDisabled(playPauseButton);
         collapseWhenDisabled(restartButton);
 
-        animationPane.widthProperty().addListener((_, _, _) -> maybeBuildInitialArray());
-        animationPane.heightProperty().addListener((_, _, _) -> maybeBuildInitialArray());
-
         restartButton.setDisable(true);
-
         model = Session.getModel();
         showInitialArray();
 
@@ -73,15 +62,6 @@ public class SortController implements Initializable {
                         });
     }
 
-    private void maybeBuildInitialArray() {
-        if (model == null
-                || model.size() == 0
-                || animationPane.getWidth() <= 0
-                || animationPane.getHeight() <= 0) {
-            playPauseButton.setDisable(true);
-        }
-    }
-
     private static void collapseWhenDisabled(final Button button) {
         button.visibleProperty().bind(button.disableProperty().not());
         button.managedProperty().bind(button.visibleProperty());
@@ -93,7 +73,7 @@ public class SortController implements Initializable {
             return;
         }
 
-        createArray(model);
+        elements = SortVisualizationBuilder.buildArray(animationPane, model);
         playPauseButton.setDisable(model.size() < 2);
     }
 
@@ -127,7 +107,7 @@ public class SortController implements Initializable {
 
         running = false;
         paused = false;
-        createArray(model);
+        elements = SortVisualizationBuilder.buildArray(animationPane, model);
         startNewAnimation();
     }
 
@@ -140,7 +120,9 @@ public class SortController implements Initializable {
         running = false;
 
         final var loader =
-                new FXMLLoader(ResourcePaths.url(ResourcePaths.MENU_VIEW), Messages.bundle());
+                new FXMLLoader(
+                        ResourcePaths.url(ResourcePaths.MENU_VIEW),
+                        ResourceBundle.getBundle(Messages.BUNDLE_NAME));
         animationPane.getScene().setRoot(loader.load());
     }
 
@@ -157,110 +139,22 @@ public class SortController implements Initializable {
 
         running = true;
         setPauseButton();
-
         restartButton.setDisable(false);
-
         currentAnimation.play();
     }
 
     private void resetPlayPauseButton() {
-        playPauseButton.setText(Messages.get("sort.button.play"));
-        playPauseButton.setTooltip(new Tooltip(Messages.get("sort.tooltip.start")));
+        playPauseButton.setText(Messages.get(KEY_PLAY));
+        playPauseButton.setTooltip(new Tooltip(Messages.get(KEY_TOOLTIP_START)));
     }
 
     private void setPauseButton() {
         playPauseButton.setText(Messages.get("sort.button.pause"));
-        playPauseButton.setTooltip(new Tooltip(Messages.get("sort.tooltip.pause")));
+        playPauseButton.setTooltip(new Tooltip(Messages.get(KEY_TOOLTIP_PAUSE)));
     }
 
     private void setResumeButton() {
-        playPauseButton.setText(Messages.get("sort.button.play"));
-        playPauseButton.setTooltip(new Tooltip(Messages.get("sort.tooltip.resume")));
+        playPauseButton.setText(Messages.get(KEY_PLAY));
+        playPauseButton.setTooltip(new Tooltip(Messages.get(KEY_TOOLTIP_RESUME)));
     }
-
-    private void createArray(final SortArray<Integer> source) {
-        animationPane.getChildren().clear();
-
-        final var count = source.size();
-
-        if (count == 0) {
-            return;
-        }
-
-        elements = new SortElement[count];
-
-        var minValue = Integer.MAX_VALUE;
-        var maxValue = Integer.MIN_VALUE;
-
-        for (var index = 0; index < count; index++) {
-            final var value = source.get(index);
-            minValue = Math.min(minValue, value);
-            maxValue = Math.max(maxValue, value);
-        }
-
-        final var layout = computeLayout(count);
-        final var allEqual = maxValue == minValue;
-        final var valueRange = (double) maxValue - minValue;
-
-        for (var index = 0; index < count; index++) {
-            final var value = source.get(index);
-
-            final double barHeight;
-            if (allEqual) {
-                barHeight = layout.columnHeight();
-            } else {
-                final var normalized = (value - minValue) / valueRange;
-                barHeight = MIN_BAR_HEIGHT + normalized * (layout.columnHeight() - MIN_BAR_HEIGHT);
-            }
-
-            final var element =
-                    new SortElement(
-                            String.valueOf(value),
-                            layout.columnWidth(),
-                            layout.columnHeight(),
-                            barHeight);
-
-            elements[index] = element;
-
-            element.setLayoutX(layout.startX() + index * (layout.columnWidth() + layout.gap()));
-            element.setLayoutY(layout.startY());
-
-            animationPane.getChildren().add(element);
-        }
-    }
-
-    private Layout computeLayout(final int count) {
-        final var paneWidth =
-                animationPane.getWidth() > 0 ? animationPane.getWidth() : DEFAULT_PANE_WIDTH;
-        final var paneHeight =
-                animationPane.getHeight() > 0 ? animationPane.getHeight() : DEFAULT_PANE_HEIGHT;
-
-        final var availableWidth = paneWidth - 2 * MARGIN;
-        final var requiredWidth = count * BASE_COLUMN_WIDTH + (count - 1) * BASE_GAP;
-
-        final var scale =
-                Math.clamp(
-                        requiredWidth > availableWidth ? availableWidth / requiredWidth : 1.0,
-                        MIN_SCALE,
-                        MAX_SCALE);
-
-        final var columnWidth = BASE_COLUMN_WIDTH * scale;
-        final var columnHeight = BASE_COLUMN_HEIGHT * scale;
-        var gap = BASE_GAP * scale;
-
-        var totalWidth = count * columnWidth + (count - 1) * gap;
-
-        if (totalWidth > availableWidth && count > 1) {
-            gap = Math.max(1.0, (availableWidth - count * columnWidth) / (count - 1));
-            totalWidth = count * columnWidth + (count - 1) * gap;
-        }
-
-        final var startX = (paneWidth - totalWidth) / 2.0;
-        final var startY = (paneHeight - columnHeight) / 2.0;
-
-        return new Layout(startX, startY, columnWidth, columnHeight, gap);
-    }
-
-    private record Layout(
-            double startX, double startY, double columnWidth, double columnHeight, double gap) {}
 }

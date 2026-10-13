@@ -7,6 +7,10 @@
     <property name="severity" value="error"/>
     <property name="fileExtensions" value="java"/>
 
+    <module name="BeforeExecutionExclusionFileFilter">
+        <property name="fileNamePattern" value="module-info\.java$"/>
+    </module>
+
     <!-- File-level checks -->
     <module name="NewlineAtEndOfFile"/>
     <module name="FileTabCharacter"/>
@@ -21,12 +25,7 @@
         <module name="UnusedImports"/>
         <module name="RedundantImport"/>
         <module name="AvoidStarImport"/>
-        <module name="CustomImportOrder">
-            <property name="customImportOrderRules"
-                      value="STATIC###THIRD_PARTY_PACKAGE###STANDARD_JAVA_PACKAGE"/>
-            <property name="sortImportsInGroupAlphabetically" value="true"/>
-            <property name="separateLineBetweenGroups" value="true"/>
-        </module>
+        <module name="IllegalImport"/>
 
         <!-- Naming conventions -->
         <module name="PackageName"/>

@@ -28,6 +28,8 @@ public class MenuController implements Initializable {
     private static final int MAX_ABS_VALUE = 10_000;
     private static final String INVALID_STYLE = "invalid";
 
+    private static final String KEY_ERROR_SIZE_LIMIT = "menu.error.size.limit";
+
     @FXML private ToggleButton manualToggle;
     //    @FXML private ToggleButton generateToggle;
 
@@ -67,7 +69,9 @@ public class MenuController implements Initializable {
         }
 
         final var loader =
-                new FXMLLoader(ResourcePaths.url(ResourcePaths.SORT_VIEW), Messages.bundle());
+                new FXMLLoader(
+                        ResourcePaths.url(ResourcePaths.SORT_VIEW),
+                        ResourceBundle.getBundle(Messages.BUNDLE_NAME));
         final Parent root = loader.load();
 
         final var source = (Node) actionEvent.getSource();
@@ -103,7 +107,7 @@ public class MenuController implements Initializable {
         }
 
         if (tokens.size() > MAX_SIZE) {
-            markError(array, arrayError, Messages.format("menu.error.size.limit", MAX_SIZE));
+            markError(array, arrayError, Messages.format(KEY_ERROR_SIZE_LIMIT, MAX_SIZE));
             updateDisplayedArray();
             return;
         }
@@ -163,7 +167,7 @@ public class MenuController implements Initializable {
         }
 
         if (value > MAX_SIZE) {
-            markError(countField, countError, Messages.format("menu.error.size.limit", MAX_SIZE));
+            markError(countField, countError, Messages.format(KEY_ERROR_SIZE_LIMIT, MAX_SIZE));
             return null;
         }
 

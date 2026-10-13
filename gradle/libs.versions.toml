@@ -9,7 +9,7 @@ googleJavaFormat = "1.36.1"
 checkstyle = "11.0.0"
 pmd = "7.17.0"
 spotbugs = "4.9.4"
-spotbugsPlugin = "6.5.12"
+spotbugsPlugin = "6.5.13"
 errorprone = "2.50.0"
 errorpronePlugin = "5.1.1"
 spotlessPlugin = "8.10.4"
@@ -17,23 +17,23 @@ jacoco = "0.8.13"
 
 [libraries]
 javafx-controls = { module = "org.openjfx:javafx-controls", version.ref = "javafx" }
-javafx-fxml     = { module = "org.openjfx:javafx-fxml",     version.ref = "javafx" }
+javafx-fxml = { module = "org.openjfx:javafx-fxml", version.ref = "javafx" }
 
-junit-jupiter           = { module = "org.junit.jupiter:junit-jupiter",     version.ref = "junit" }
+junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit" }
 junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
-assertj-core            = { module = "org.assertj:assertj-core",            version.ref = "assertj" }
-mockito-core            = { module = "org.mockito:mockito-core",            version.ref = "mockito" }
-mockito-junit-jupiter   = { module = "org.mockito:mockito-junit-jupiter",   version.ref = "mockito" }
+assertj-core = { module = "org.assertj:assertj-core", version.ref = "assertj" }
+mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito" }
+mockito-junit-jupiter = { module = "org.mockito:mockito-junit-jupiter", version.ref = "mockito" }
 
 errorprone-core = { module = "com.google.errorprone:error_prone_core", version.ref = "errorprone" }
 
-javafx-plugin   = { module = "org.openjfx:javafx-plugin",                        version.ref = "javafxPlugin" }
-spotless-plugin  = { module = "com.diffplug.spotless:spotless-plugin-gradle",     version.ref = "spotlessPlugin" }
-spotbugs-plugin  = { module = "com.github.spotbugs.snom:spotbugs-gradle-plugin",  version.ref = "spotbugsPlugin" }
-errorprone-plugin= { module = "net.ltgt.gradle:gradle-errorprone-plugin",         version.ref = "errorpronePlugin" }
+javafx-plugin = { module = "org.openjfx:javafx-plugin", version.ref = "javafxPlugin" }
+spotless-plugin = { module = "com.diffplug.spotless:spotless-plugin-gradle", version.ref = "spotlessPlugin" }
+spotbugs-plugin = { module = "com.github.spotbugs.snom:spotbugs-gradle-plugin", version.ref = "spotbugsPlugin" }
+errorprone-plugin = { module = "net.ltgt.gradle:gradle-errorprone-plugin", version.ref = "errorpronePlugin" }
 
 [plugins]
-javafx     = { id = "org.openjfx.javafxplugin", version.ref = "javafxPlugin" }
-spotless   = { id = "com.diffplug.spotless",    version.ref = "spotlessPlugin" }
-spotbugs   = { id = "com.github.spotbugs",      version.ref = "spotbugsPlugin" }
-errorprone = { id = "net.ltgt.errorprone",      version.ref = "errorpronePlugin" }
+javafx = { id = "org.openjfx.javafxplugin", version.ref = "javafxPlugin" }
+spotless = { id = "com.diffplug.spotless", version.ref = "spotlessPlugin" }
+spotbugs = { id = "com.github.spotbugs", version.ref = "spotbugsPlugin" }
+errorprone = { id = "net.ltgt.errorprone", version.ref = "errorpronePlugin" }
