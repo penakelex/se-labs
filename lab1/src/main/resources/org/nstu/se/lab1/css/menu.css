@@ -1,0 +1,106 @@
+.menu-screen {
+    -fx-alignment: center;
+    -fx-padding: 40 48;
+    -fx-spacing: 28;
+}
+
+.segmented {
+    -fx-background-color: #e2e8f0;
+    -fx-background-radius: 12;
+    -fx-padding: 5;
+    -fx-spacing: 4;
+    -fx-alignment: center;
+    -fx-effect: innershadow(gaussian, rgba(15, 23, 42, 0.08), 4, 0, 0, 1);
+}
+
+.segment {
+    -fx-background-color: transparent;
+    -fx-background-radius: 8;
+    -fx-text-fill: #475569;
+    -fx-font-size: 15px;
+    -fx-font-weight: 600;
+    -fx-padding: 10 32;
+    -fx-cursor: hand;
+}
+
+.segment:hover {
+    -fx-text-fill: #1e293b;
+}
+
+.segment:selected {
+    -fx-background-color: white;
+    -fx-text-fill: #4f46e5;
+    -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.12), 6, 0.1, 0, 2);
+}
+
+.menu-body {
+    -fx-pref-height: 220;
+    -fx-alignment: center;
+}
+
+.menu-input-wide,
+.menu-input-small {
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-border-color: #e2e8f0;
+    -fx-border-width: 1.5;
+    -fx-background-color: white;
+    -fx-padding: 10 16;
+    -fx-font-size: 16px;
+    -fx-text-fill: #0f172a;
+    -fx-prompt-text-fill: #94a3b8;
+    -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.04), 6, 0, 0, 2);
+}
+
+.menu-input-wide {
+    -fx-pref-width: 360;
+    -fx-max-width: 360;
+}
+
+.menu-input-small {
+    -fx-pref-width: 120;
+    -fx-max-width: 120;
+}
+
+.menu-input-wide:focused,
+.menu-input-small:focused {
+    -fx-border-color: #6366f1;
+    -fx-effect: dropshadow(gaussian, rgba(99, 102, 241, 0.35), 12, 0.2, 0, 0);
+}
+
+.menu-input-wide.invalid,
+.menu-input-small.invalid {
+    -fx-border-color: #ef4444;
+    -fx-background-color: #fef2f2;
+    -fx-effect: dropshadow(gaussian, rgba(239, 68, 68, 0.3), 12, 0.2, 0, 0);
+}
+
+.error-label {
+    -fx-text-fill: #ef4444;
+    -fx-font-size: 13px;
+    -fx-font-weight: 500;
+    -fx-max-width: 100000;
+    -fx-alignment: center;
+}
+
+.array-preview {
+    -fx-text-fill: #1e293b;
+    -fx-font-size: 16px;
+    -fx-font-family: "JetBrains Mono", "Consolas", "Menlo", monospace;
+    -fx-max-width: 800;
+    -fx-wrap-text: true;
+    -fx-text-alignment: center;
+    -fx-alignment: center;
+}
+
+.manual-pane,
+.generate-pane,
+.preview-pane {
+    -fx-alignment: center;
+    -fx-spacing: 12;
+}
+
+.form-row {
+    -fx-alignment: center;
+    -fx-spacing: 12;
+}

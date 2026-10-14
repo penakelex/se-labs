@@ -1,0 +1,27 @@
+.root {
+    -fx-font-family: "Segoe UI", "Inter", "Helvetica Neue", sans-serif;
+    -fx-font-size: 16px;
+    -fx-background-color: linear-gradient(to bottom right,
+    #eef2ff 0%, #f8fafc 55%, #ecfeff 100%);
+    -fx-accent: #6366f1;
+    -fx-focus-color: #6366f1;
+    -fx-faint-focus-color: transparent;
+}
+
+.screen-title {
+    -fx-font-size: 28px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #0f172a;
+    -fx-alignment: center;
+    -fx-text-alignment: center;
+    -fx-padding: 0 0 4 0;
+}
+
+.muted-caption {
+    -fx-text-fill: #64748b;
+    -fx-font-size: 15px;
+    -fx-font-weight: 600;
+    -fx-max-width: 100000;
+    -fx-alignment: center;
+    -fx-text-alignment: center;
+}

@@ -9,12 +9,13 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Pane;
 
+import org.nstu.se.lab1.AppContext;
 import org.nstu.se.lab1.Messages;
 import org.nstu.se.lab1.ResourcePaths;
 import org.nstu.se.lab1.model.QuickSorter;
-import org.nstu.se.lab1.model.Session;
 import org.nstu.se.lab1.model.SortArray;
 import org.nstu.se.lab1.model.SortStep;
+import org.nstu.se.lab1.ui.menu.MenuController;
 
 import java.io.IOException;
 import java.net.URL;
@@ -38,13 +39,19 @@ public class SortController implements Initializable {
     private boolean paused;
     private boolean running;
 
+    private final AppContext context;
+
+    public SortController(final AppContext context) {
+        this.context = context;
+    }
+
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
         collapseWhenDisabled(playPauseButton);
         collapseWhenDisabled(restartButton);
 
         restartButton.setDisable(true);
-        model = Session.getModel();
+        model = context.retrieveModel();
         showInitialArray();
 
         resetPlayPauseButton();
@@ -101,28 +108,35 @@ public class SortController implements Initializable {
 
     @FXML
     public void restart() {
+        final boolean wasPlaying = running && !paused;
+
         if (currentAnimation != null) {
             currentAnimation.stop();
         }
 
         running = false;
         paused = false;
+
         elements = SortVisualizationBuilder.buildArray(animationPane, model);
-        startNewAnimation();
+        resetPlayPauseButton();
+
+        if (wasPlaying) {
+            startNewAnimation();
+        }
     }
 
-    @FXML
     public void comeBack() throws IOException {
         if (currentAnimation != null) {
             currentAnimation.stop();
         }
 
-        running = false;
-
         final var loader =
                 new FXMLLoader(
                         ResourcePaths.url(ResourcePaths.MENU_VIEW),
                         ResourceBundle.getBundle(Messages.BUNDLE_NAME));
+
+        loader.setControllerFactory(_ -> new MenuController(context));
+
         animationPane.getScene().setRoot(loader.load());
     }
 

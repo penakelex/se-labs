@@ -1,0 +1,52 @@
+.sort-screen {
+    -fx-padding: 36 36 28 36;
+    -fx-spacing: 24;
+}
+
+.animation-pane {
+    -fx-background-color: linear-gradient(to bottom, #ffffff, #f8fafc);
+    -fx-border-color: #e2e8f0;
+    -fx-border-width: 1;
+    -fx-border-radius: 16;
+    -fx-background-radius: 16;
+    -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.06), 18, 0.05, 0, 6);
+}
+
+.sort-element {
+    -fx-spacing: 6;
+}
+
+.sort-bar-container {
+    -fx-alignment: bottom-center;
+}
+
+.sort-bar {
+    -fx-background-color: linear-gradient(to bottom, #94a3b8, #64748b);
+    -fx-background-radius: 6 6 0 0;
+    -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.15), 4, 0, 0, 2);
+}
+
+.sort-element-in-range .sort-bar {
+    -fx-background-color: linear-gradient(to bottom, #60a5fa, #3b82f6);
+}
+
+.sort-element-pivot .sort-bar {
+    -fx-background-color: linear-gradient(to bottom, #fbbf24, #f59e0b);
+    -fx-effect: dropshadow(gaussian, rgba(245, 158, 11, 0.55), 12, 0.15, 0, 0);
+}
+
+.sort-element-placed .sort-bar {
+    -fx-background-color: linear-gradient(to bottom, #34d399, #10b981);
+}
+
+.sort-value {
+    -fx-text-fill: #334155;
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
+    -fx-alignment: center;
+}
+
+.speed-pane {
+    -fx-spacing: 12;
+    -fx-alignment: center;
+}

@@ -74,7 +74,7 @@ public final class SortVisualizationBuilder {
         final var paneHeight =
                 animationPane.getHeight() > 0 ? animationPane.getHeight() : DEFAULT_PANE_HEIGHT;
 
-        final var availableWidth = paneWidth - 2 * MARGIN;
+        final var availableWidth = Math.max(100.0, paneWidth - 2 * MARGIN);
         final var requiredWidth = count * BASE_COLUMN_WIDTH + (count - 1) * BASE_GAP;
 
         final var scale =
@@ -90,12 +90,12 @@ public final class SortVisualizationBuilder {
         var totalWidth = count * columnWidth + (count - 1) * gap;
 
         if (totalWidth > availableWidth && count > 1) {
-            gap = Math.max(1.0, (availableWidth - count * columnWidth) / (count - 1));
+            gap = Math.max(2.0, (availableWidth - count * columnWidth) / (count - 1));
             totalWidth = count * columnWidth + (count - 1) * gap;
         }
 
-        final var startX = (paneWidth - totalWidth) / 2.0;
-        final var startY = (paneHeight - columnHeight) / 2.0;
+        final var startX = Math.max(MARGIN, (paneWidth - totalWidth) / 2.0);
+        final var startY = Math.max(MARGIN, (paneHeight - columnHeight) / 2.0);
 
         return new Layout(startX, startY, columnWidth, columnHeight, gap);
     }

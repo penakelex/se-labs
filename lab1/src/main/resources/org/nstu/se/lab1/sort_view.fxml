@@ -7,11 +7,12 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
+<?import javafx.scene.control.Tooltip?>
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="org.nstu.se.lab1.ui.animation.SortController"
       alignment="TOP_CENTER"
-      styleClass="screen sort-screen">
+      styleClass="sort-screen">
     <Pane fx:id="animationPane" styleClass="animation-pane" VBox.vgrow="ALWAYS"/>
 
     <VBox styleClass="speed-pane">
@@ -25,8 +26,15 @@
 
     <HBox styleClass="controls">
         <Button fx:id="playPauseButton" onAction="#togglePlayPause" styleClass="icon-button"/>
-        <Button fx:id="restartButton" onAction="#restart"
-                text="%sort.button.restart" styleClass="icon-button"/>
-        <Button text="%sort.button.back" onAction="#comeBack" styleClass="icon-button"/>
+        <Button fx:id="restartButton" onAction="#restart" text="%sort.button.restart" styleClass="icon-button">
+            <tooltip>
+                <Tooltip text="%sort.tooltip.restart"/>
+            </tooltip>
+        </Button>
+        <Button text="%sort.button.back" onAction="#comeBack" styleClass="icon-button">
+            <tooltip>
+                <Tooltip text="%sort.tooltip.back"/>
+            </tooltip>
+        </Button>
     </HBox>
 </VBox>

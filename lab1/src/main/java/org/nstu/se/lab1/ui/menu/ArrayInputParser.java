@@ -1,0 +1,134 @@
+package org.nstu.se.lab1.ui.menu;
+
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+
+import org.nstu.se.lab1.Messages;
+
+import java.util.Arrays;
+import java.util.Random;
+
+public final class ArrayInputParser {
+    private static final int MAX_SIZE = 25;
+    private static final int MAX_ABS_VALUE = 10_000;
+    private static final String INVALID_STYLE = "invalid";
+    private static final String KEY_ERROR_SIZE_LIMIT = "menu.error.size.limit";
+
+    private ArrayInputParser() {}
+
+    public static Integer[] parseManual(final TextField arrayField, final Label arrayError) {
+        final var raw = arrayField.getText();
+        final var tokens =
+                Arrays.stream(raw.split("[,\\s]+"))
+                        .map(String::trim)
+                        .filter(token -> !token.isEmpty())
+                        .toList();
+
+        if (tokens.isEmpty()) {
+            clearError(arrayField, arrayError);
+            return new Integer[0];
+        }
+
+        if (tokens.size() > MAX_SIZE) {
+            markError(arrayField, arrayError, Messages.format(KEY_ERROR_SIZE_LIMIT, MAX_SIZE));
+            return new Integer[0];
+        }
+
+        try {
+            final var parsed = tokens.stream().map(Integer::parseInt).toArray(Integer[]::new);
+            clearError(arrayField, arrayError);
+            return parsed;
+        } catch (final NumberFormatException exception) {
+            markError(arrayField, arrayError, Messages.get("menu.error.manual.invalid"));
+            return new Integer[0];
+        }
+    }
+
+    public static Integer[] parseGeneration(
+            final TextField countField,
+            final Label countError,
+            final TextField smallNum,
+            final Label smallNumError,
+            final TextField bigNum,
+            final Label bigNumError) {
+
+        final var count = validateCount(countField, countError);
+        final var min = tryParse(smallNum, smallNumError, "menu.error.from.integer");
+        final var max = tryParse(bigNum, bigNumError, "menu.error.to.integer");
+
+        if (count == null || min == null || max == null) {
+            return new Integer[0];
+        }
+
+        if (min > max) {
+            markError(smallNum, smallNumError, Messages.get("menu.error.range.order"));
+            return new Integer[0];
+        }
+
+        if (Math.abs(min) > MAX_ABS_VALUE || Math.abs(max) > MAX_ABS_VALUE) {
+            markError(
+                    bigNum,
+                    bigNumError,
+                    Messages.format("menu.error.range.magnitude", MAX_ABS_VALUE));
+            return new Integer[0];
+        }
+
+        return new Random().ints(count, min, max + 1).boxed().toArray(Integer[]::new);
+    }
+
+    private static Integer validateCount(final TextField countField, final Label countError) {
+        final var value = tryParse(countField, countError, "menu.error.count.integer");
+
+        if (value == null) {
+            return null;
+        }
+
+        if (value <= 0) {
+            markError(countField, countError, Messages.get("menu.error.count.positive"));
+            return null;
+        }
+
+        if (value > MAX_SIZE) {
+            markError(countField, countError, Messages.format(KEY_ERROR_SIZE_LIMIT, MAX_SIZE));
+            return null;
+        }
+
+        clearError(countField, countError);
+        return value;
+    }
+
+    private static Integer tryParse(
+            final TextField field, final Label error, final String messageKey) {
+        final var text = field.getText();
+
+        if (text.isBlank()) {
+            clearError(field, error);
+            return null;
+        }
+
+        try {
+            final var parsed = Integer.parseInt(text);
+            clearError(field, error);
+            return parsed;
+        } catch (final NumberFormatException exception) {
+            markError(field, error, Messages.get(messageKey));
+            return null;
+        }
+    }
+
+    public static void markError(final TextField field, final Label error, final String message) {
+        if (!field.getStyleClass().contains(INVALID_STYLE)) {
+            field.getStyleClass().add(INVALID_STYLE);
+        }
+
+        error.setText(message);
+        error.setVisible(true);
+        error.setManaged(true);
+    }
+
+    public static void clearError(final TextField field, final Label error) {
+        field.getStyleClass().remove(INVALID_STYLE);
+        error.setVisible(false);
+        error.setManaged(false);
+    }
+}
