@@ -6,7 +6,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
-import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Pane;
 
 import org.nstu.se.lab1.AppContext;
@@ -19,15 +18,11 @@ import org.nstu.se.lab1.ui.menu.MenuController;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
 
 public class SortController implements Initializable {
-    private static final String KEY_PLAY = "sort.button.play";
-    private static final String KEY_TOOLTIP_START = "sort.tooltip.start";
-    private static final String KEY_TOOLTIP_PAUSE = "sort.tooltip.pause";
-    private static final String KEY_TOOLTIP_RESUME = "sort.tooltip.resume";
-
     @FXML private Pane animationPane;
     @FXML private Slider speedSlider;
     @FXML private Button playPauseButton;
@@ -36,6 +31,8 @@ public class SortController implements Initializable {
     private SortArray<Integer> model;
     private SortElement[] elements;
     private Animation currentAnimation;
+    private List<SortStep> sortingPlan;
+    private Iterator<SortStep> steps;
     private boolean paused;
     private boolean running;
 
@@ -47,14 +44,14 @@ public class SortController implements Initializable {
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        collapseWhenDisabled(playPauseButton);
-        collapseWhenDisabled(restartButton);
+        SortButtonManager.collapseWhenDisabled(playPauseButton);
+        SortButtonManager.collapseWhenDisabled(restartButton);
 
         restartButton.setDisable(true);
         model = context.retrieveModel();
         showInitialArray();
 
-        resetPlayPauseButton();
+        SortButtonManager.resetPlayPauseButton(playPauseButton);
         playPauseButton.setDisable(model == null || model.size() < 2);
 
         animationPane
@@ -69,11 +66,6 @@ public class SortController implements Initializable {
                         });
     }
 
-    private static void collapseWhenDisabled(final Button button) {
-        button.visibleProperty().bind(button.disableProperty().not());
-        button.managedProperty().bind(button.visibleProperty());
-    }
-
     private void showInitialArray() {
         if (model == null || model.size() == 0 || animationPane.getWidth() <= 0) {
             playPauseButton.setDisable(true);
@@ -81,6 +73,7 @@ public class SortController implements Initializable {
         }
 
         elements = SortVisualizationBuilder.buildArray(animationPane, model);
+        sortingPlan = QuickSorter.plan(model);
         playPauseButton.setDisable(model.size() < 2);
     }
 
@@ -98,11 +91,11 @@ public class SortController implements Initializable {
         if (paused) {
             currentAnimation.play();
             paused = false;
-            setPauseButton();
+            SortButtonManager.setPauseButton(playPauseButton);
         } else {
             currentAnimation.pause();
             paused = true;
-            setResumeButton();
+            SortButtonManager.setResumeButton(playPauseButton);
         }
     }
 
@@ -118,7 +111,7 @@ public class SortController implements Initializable {
         paused = false;
 
         elements = SortVisualizationBuilder.buildArray(animationPane, model);
-        resetPlayPauseButton();
+        SortButtonManager.resetPlayPauseButton(playPauseButton);
 
         if (wasPlaying) {
             startNewAnimation();
@@ -141,34 +134,32 @@ public class SortController implements Initializable {
     }
 
     private void startNewAnimation() {
-        final List<SortStep> steps = QuickSorter.plan(model);
-        currentAnimation = SortAnimator.build(steps, elements);
-        currentAnimation.rateProperty().bind(speedSlider.valueProperty());
-        currentAnimation.setOnFinished(
-                _ -> {
-                    running = false;
-                    paused = false;
-                    resetPlayPauseButton();
-                });
+        elements = SortVisualizationBuilder.buildArray(animationPane, model);
+        steps = sortingPlan.iterator();
 
         running = true;
-        setPauseButton();
+        paused = false;
+
         restartButton.setDisable(false);
+        SortButtonManager.setPauseButton(playPauseButton);
+
+        playNextStep();
+    }
+
+    private void playNextStep() {
+        if (!running || steps == null) {
+            return;
+        }
+
+        if (!steps.hasNext()) {
+            running = false;
+            paused = false;
+            SortButtonManager.resetPlayPauseButton(playPauseButton);
+            return;
+        }
+
+        currentAnimation = SortAnimator.createStep(steps.next(), elements, this::playNextStep);
+        currentAnimation.rateProperty().bind(speedSlider.valueProperty());
         currentAnimation.play();
-    }
-
-    private void resetPlayPauseButton() {
-        playPauseButton.setText(Messages.get(KEY_PLAY));
-        playPauseButton.setTooltip(new Tooltip(Messages.get(KEY_TOOLTIP_START)));
-    }
-
-    private void setPauseButton() {
-        playPauseButton.setText(Messages.get("sort.button.pause"));
-        playPauseButton.setTooltip(new Tooltip(Messages.get(KEY_TOOLTIP_PAUSE)));
-    }
-
-    private void setResumeButton() {
-        playPauseButton.setText(Messages.get(KEY_PLAY));
-        playPauseButton.setTooltip(new Tooltip(Messages.get(KEY_TOOLTIP_RESUME)));
     }
 }

@@ -13,6 +13,7 @@ public final class ArrayInputParser {
     private static final int MAX_ABS_VALUE = 10_000;
     private static final String INVALID_STYLE = "invalid";
     private static final String KEY_ERROR_SIZE_LIMIT = "menu.error.size.limit";
+    private static final String KEY_ERROR_MAGNITUDE = "menu.error.range.magnitude";
 
     private ArrayInputParser() {}
 
@@ -36,6 +37,17 @@ public final class ArrayInputParser {
 
         try {
             final var parsed = tokens.stream().map(Integer::parseInt).toArray(Integer[]::new);
+
+            for (final var value : parsed) {
+                if (Math.abs(value) > MAX_ABS_VALUE) {
+                    markError(
+                            arrayField,
+                            arrayError,
+                            Messages.format(KEY_ERROR_MAGNITUDE, MAX_ABS_VALUE));
+                    return new Integer[0];
+                }
+            }
+
             clearError(arrayField, arrayError);
             return parsed;
         } catch (final NumberFormatException exception) {
@@ -66,10 +78,7 @@ public final class ArrayInputParser {
         }
 
         if (Math.abs(min) > MAX_ABS_VALUE || Math.abs(max) > MAX_ABS_VALUE) {
-            markError(
-                    bigNum,
-                    bigNumError,
-                    Messages.format("menu.error.range.magnitude", MAX_ABS_VALUE));
+            markError(bigNum, bigNumError, Messages.format(KEY_ERROR_MAGNITUDE, MAX_ABS_VALUE));
             return new Integer[0];
         }
 
