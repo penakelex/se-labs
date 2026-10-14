@@ -1,6 +1,7 @@
 package org.nstu.se.lab1.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public final class QuickSorter {
@@ -12,7 +13,7 @@ public final class QuickSorter {
 
         sort(data, 0, data.length - 1, steps);
 
-        return List.copyOf(steps);
+        return Collections.unmodifiableList(steps);
     }
 
     private static <T extends Comparable<? super T>> void sort(
@@ -43,11 +44,8 @@ public final class QuickSorter {
         var boundary = low;
 
         for (var scan = low; scan < high; scan++) {
-
             if (data[scan].compareTo(pivotValue) < 0) {
-
                 if (boundary != scan) {
-
                     swap(data, boundary, scan);
                     steps.add(new SortStep.Swap(boundary, scan));
                 }
@@ -57,7 +55,6 @@ public final class QuickSorter {
         }
 
         if (boundary != high) {
-
             swap(data, boundary, high);
             steps.add(new SortStep.Swap(boundary, high));
         }

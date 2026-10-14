@@ -44,6 +44,7 @@ public final class SortVisualizationBuilder {
             final var value = source.get(index);
 
             final double barHeight;
+
             if (allEqual) {
                 barHeight = layout.columnHeight();
             } else {

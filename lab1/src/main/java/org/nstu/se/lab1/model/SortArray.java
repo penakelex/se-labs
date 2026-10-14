@@ -31,8 +31,8 @@ public final class SortArray<T extends Comparable<? super T>> {
     }
 
     @Override
-    public boolean equals(final Object obj) {
-        return obj instanceof SortArray<?> other && Arrays.equals(values, other.values);
+    public boolean equals(final Object object) {
+        return object instanceof SortArray<?> other && Arrays.equals(values, other.values);
     }
 
     @Override

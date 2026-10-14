@@ -62,20 +62,16 @@ public class MenuController implements Initializable {
     }
 
     private void setupToggleGroup() {
-        if (modeGroup != null) {
-            modeGroup
-                    .selectedToggleProperty()
-                    .addListener(
-                            (_, oldSelection, newSelection) -> {
-                                if (newSelection == null) {
-                                    modeGroup.selectToggle(oldSelection);
-                                } else {
-                                    switchMode(newSelection.equals(manualToggle));
-                                }
-                            });
-        } else {
-            manualToggle.selectedProperty().addListener((_, _, selected) -> switchMode(selected));
-        }
+        modeGroup
+                .selectedToggleProperty()
+                .addListener(
+                        (_, oldSelection, newSelection) -> {
+                            if (newSelection == null) {
+                                modeGroup.selectToggle(oldSelection);
+                            } else {
+                                switchMode(newSelection.equals(manualToggle));
+                            }
+                        });
     }
 
     private void setupListeners() {
@@ -93,18 +89,11 @@ public class MenuController implements Initializable {
         bigNum.setText(state.maxText());
 
         if (state.manualMode()) {
-            if (modeGroup != null) {
-                modeGroup.selectToggle(manualToggle);
-            } else {
-                manualToggle.setSelected(true);
-            }
+            modeGroup.selectToggle(manualToggle);
         } else {
-            if (modeGroup != null) {
-                modeGroup.selectToggle(generateToggle);
-            } else {
-                generateToggle.setSelected(true);
-            }
+            modeGroup.selectToggle(generateToggle);
         }
+
         switchMode(state.manualMode());
     }
 
@@ -159,14 +148,14 @@ public class MenuController implements Initializable {
         startButton.setDisable(false);
     }
 
-    private void switchMode(final boolean manual) {
-        manualPane.setVisible(manual);
-        manualPane.setManaged(manual);
+    private void switchMode(final boolean isManualMode) {
+        manualPane.setVisible(isManualMode);
+        manualPane.setManaged(isManualMode);
 
-        generatePane.setVisible(!manual);
-        generatePane.setManaged(!manual);
+        generatePane.setVisible(!isManualMode);
+        generatePane.setManaged(!isManualMode);
 
-        if (manual) {
+        if (isManualMode) {
             handleManualInput();
         } else {
             handleGenerationInput();

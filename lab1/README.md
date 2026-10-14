@@ -58,7 +58,7 @@ lab1/
    └─ test/
       └─ java/org/nstu/se/lab1/
          ├─ model/
-         │  └─ MergeSorterTest.java — тесты модели массива
+         │  └─ QuickSorterTest.java — тесты модели массива
          └─ ui/
             ├─ JavaFxTestBase.java  — базовый класс для UI-тестов
             ├─ animation/

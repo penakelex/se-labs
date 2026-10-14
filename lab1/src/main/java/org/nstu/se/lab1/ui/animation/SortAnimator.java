@@ -3,6 +3,7 @@ package org.nstu.se.lab1.ui.animation;
 import javafx.animation.Animation;
 import javafx.animation.ParallelTransition;
 import javafx.animation.PauseTransition;
+import javafx.animation.SequentialTransition;
 import javafx.animation.TranslateTransition;
 import javafx.util.Duration;
 
@@ -53,7 +54,6 @@ public final class SortAnimator {
             final int firstIndex,
             final int secondIndex,
             final Runnable afterStep) {
-
         final var firstNode = elements[firstIndex];
         final var secondNode = elements[secondIndex];
 
@@ -94,7 +94,7 @@ public final class SortAnimator {
         final var lower = new TranslateTransition(Duration.millis(SWAP_LOWER_MILLIS), node);
         lower.setToY(0);
 
-        return new javafx.animation.SequentialTransition(lift, across, lower);
+        return new SequentialTransition(lift, across, lower);
     }
 
     private static void applyRange(final SortElement[] elements, final int low, final int high) {

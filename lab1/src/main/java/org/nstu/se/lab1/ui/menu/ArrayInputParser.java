@@ -59,30 +59,30 @@ public final class ArrayInputParser {
     public static Integer[] parseGeneration(
             final TextField countField,
             final Label countError,
-            final TextField smallNum,
-            final Label smallNumError,
-            final TextField bigNum,
-            final Label bigNumError) {
-
+            final TextField smallNumber,
+            final Label smallNumberError,
+            final TextField bigNumber,
+            final Label bigNumberError) {
         final var count = validateCount(countField, countError);
-        final var min = tryParse(smallNum, smallNumError, "menu.error.from.integer");
-        final var max = tryParse(bigNum, bigNumError, "menu.error.to.integer");
+        final var minimum = tryParse(smallNumber, smallNumberError, "menu.error.from.integer");
+        final var maximum = tryParse(bigNumber, bigNumberError, "menu.error.to.integer");
 
-        if (count == null || min == null || max == null) {
+        if (count == null || minimum == null || maximum == null) {
             return new Integer[0];
         }
 
-        if (min > max) {
-            markError(smallNum, smallNumError, Messages.get("menu.error.range.order"));
+        if (minimum > maximum) {
+            markError(smallNumber, smallNumberError, Messages.get("menu.error.range.order"));
             return new Integer[0];
         }
 
-        if (Math.abs(min) > MAX_ABS_VALUE || Math.abs(max) > MAX_ABS_VALUE) {
-            markError(bigNum, bigNumError, Messages.format(KEY_ERROR_MAGNITUDE, MAX_ABS_VALUE));
+        if (Math.abs(minimum) > MAX_ABS_VALUE || Math.abs(maximum) > MAX_ABS_VALUE) {
+            markError(
+                    bigNumber, bigNumberError, Messages.format(KEY_ERROR_MAGNITUDE, MAX_ABS_VALUE));
             return new Integer[0];
         }
 
-        return new Random().ints(count, min, max + 1).boxed().toArray(Integer[]::new);
+        return new Random().ints(count, minimum, maximum + 1).boxed().toArray(Integer[]::new);
     }
 
     private static Integer validateCount(final TextField countField, final Label countError) {

@@ -62,12 +62,13 @@ public class SortElement extends VBox {
     }
 
     private void toggle(final String style, final boolean enabled) {
-        if (enabled) {
-            if (!getStyleClass().contains(style)) {
-                getStyleClass().add(style);
-            }
-        } else {
+        if (!enabled) {
             getStyleClass().remove(style);
+            return;
+        }
+
+        if (!getStyleClass().contains(style)) {
+            getStyleClass().add(style);
         }
     }
 }
