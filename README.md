@@ -1,11 +1,13 @@
 # SE Labs
 
-Лабораторные работы по дисциплине «Инжиниринг ПО. Часть 1. Паттерны программирования и проектирования ПО».
+Лабораторные работы по дисциплине «Инжиниринг ПО. Часть 1. Паттерны программирования и
+проектирования ПО».
 
 ## Требования
 
 - **JDK 25+**.
-  Gradle-обёртка устанавливается автоматически при первом запуске — отдельно Gradle ставить не нужно.
+  Gradle-обёртка устанавливается автоматически при первом запуске — отдельно Gradle ставить не
+  нужно.
 - **Git**. На Windows — с Git Bash, чтобы корректно работали хуки.
 
 ## Структура репозитория
@@ -54,7 +56,8 @@ se-labs/
 
 ## Стандарты кода
 
-- **Формат**: [Google Java Format](https://github.com/google/google-java-format), 4 пробела, 100 символов в строке, LF.
+- **Формат**: [Google Java Format](https://github.com/google/google-java-format), 4 пробела, 100
+  символов в строке, LF.
 - **Проверки**: Checkstyle, PMD, SpotBugs, Error Prone.
 - **Версия Java**: 25+ (toolchain).
 - **JavaFX**: 27.
@@ -90,10 +93,9 @@ se-labs/
    ```
 
 3. Добавить `include("labN")` в `settings.gradle.kts`.
-4. Исходники — в `labN/src/main/java/org/nstu/se/labN/`, ресурсы — в `labN/src/main/resources/org/nstu/se/labN/`.
+4. Исходники — в `labN/src/main/java/org/nstu/se/labN/`, ресурсы — в
+   `labN/src/main/resources/org/nstu/se/labN/`.
 
 ## Полезные ссылки
 
 - [lab1/README.md](./lab1/README.md)
-
-```
