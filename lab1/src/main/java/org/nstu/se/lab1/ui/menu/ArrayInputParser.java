@@ -3,6 +3,7 @@ package org.nstu.se.lab1.ui.menu;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
+import org.jspecify.annotations.Nullable;
 import org.nstu.se.lab1.Messages;
 
 import java.util.Arrays;
@@ -85,7 +86,8 @@ public final class ArrayInputParser {
         return new Random().ints(count, minimum, maximum + 1).boxed().toArray(Integer[]::new);
     }
 
-    private static Integer validateCount(final TextField countField, final Label countError) {
+    private static @Nullable Integer validateCount(
+            final TextField countField, final Label countError) {
         final var value = tryParse(countField, countError, "menu.error.count.integer");
 
         if (value == null) {
@@ -106,7 +108,7 @@ public final class ArrayInputParser {
         return value;
     }
 
-    private static Integer tryParse(
+    private static @Nullable Integer tryParse(
             final TextField field, final Label error, final String messageKey) {
         final var text = field.getText();
 

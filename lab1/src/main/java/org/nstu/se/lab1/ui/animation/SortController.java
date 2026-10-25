@@ -20,8 +20,10 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
+@SuppressWarnings("NullAway.Init")
 public class SortController implements Initializable {
     @FXML private Pane animationPane;
     @FXML private Slider speedSlider;
@@ -48,7 +50,10 @@ public class SortController implements Initializable {
         SortButtonManager.collapseWhenDisabled(restartButton);
 
         restartButton.setDisable(true);
-        model = context.retrieveModel();
+        model =
+                Objects.requireNonNull(
+                        context.retrieveModel(),
+                        "Model must be set before opening the sort screen");
         showInitialArray();
 
         SortButtonManager.resetPlayPauseButton(playPauseButton);

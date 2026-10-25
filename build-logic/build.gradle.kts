@@ -44,6 +44,10 @@ gradlePlugin {
             id = "se-labs.quality-conventions"
             implementationClass = "org.nstu.se.QualityConventionsPlugin"
         }
+        create("spotlessConventions") {
+            id = "se-labs.spotless-conventions"
+            implementationClass = "org.nstu.se.SpotlessConventionsPlugin"
+        }
     }
 }
 

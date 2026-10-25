@@ -25,6 +25,7 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.ResourceBundle;
 
+@SuppressWarnings("NullAway.Init")
 public class MenuController implements Initializable {
     private final AppContext context;
 

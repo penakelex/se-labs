@@ -1,21 +1,22 @@
 package org.nstu.se.lab1;
 
+import org.jspecify.annotations.Nullable;
 import org.nstu.se.lab1.model.MenuState;
 import org.nstu.se.lab1.model.SortArray;
 
 public final class AppContext {
-    private SortArray<Integer> model;
+    private @Nullable SortArray<Integer> model;
     private MenuState menuState = new MenuState(true, "", "", "", "");
 
     public boolean hasValidModel() {
         return model != null && model.size() > 0;
     }
 
-    public SortArray<Integer> retrieveModel() {
+    public @Nullable SortArray<Integer> retrieveModel() {
         return model;
     }
 
-    public void updateModel(final SortArray<Integer> newModel) {
+    public void updateModel(@Nullable final SortArray<Integer> newModel) {
         this.model = newModel;
     }
 

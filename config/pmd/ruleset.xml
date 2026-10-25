@@ -32,7 +32,7 @@
 
     <rule ref="category/java/design.xml">
         <!-- Static utility classes do not always require a constructor -->
-        <exclude name="UseUtilityClass"/>
+        <exclude name="InstantiableUtilityClass"/>
         <!-- Fields used in only one method are normal for JavaFX controllers -->
         <exclude name="SingularField"/>
     </rule>

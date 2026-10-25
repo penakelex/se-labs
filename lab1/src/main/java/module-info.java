@@ -1,6 +1,7 @@
 module org.nstu.se.sorting {
     requires javafx.controls;
     requires javafx.fxml;
+    requires org.jspecify;
 
     opens org.nstu.se.lab1 to
             javafx.fxml;
