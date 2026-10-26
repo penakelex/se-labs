@@ -4,7 +4,9 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.api.plugins.JavaPlugin
+import org.gradle.api.tasks.testing.Test
 import org.gradle.kotlin.dsl.getByType
+import org.gradle.kotlin.dsl.withType
 
 class TestConventionsPlugin : Plugin<Project> {
     override fun apply(target: Project) {
@@ -19,5 +21,10 @@ class TestConventionsPlugin : Plugin<Project> {
         target.dependencies.add("testImplementation", libs.findLibrary("assertj-core").get())
         target.dependencies.add("testImplementation", libs.findLibrary("mockito-core").get())
         target.dependencies.add("testImplementation", libs.findLibrary("mockito-junit-jupiter").get())
+
+        target.tasks.withType<Test>().configureEach {
+            systemProperty("glass.platform", "Headless")
+            systemProperty("prism.order", "sw")
+        }
     }
 }
