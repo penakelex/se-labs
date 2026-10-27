@@ -17,4 +17,5 @@ dependencyResolutionManagement {
 
 include(
     "lab1",
+    "lab2"
 )
