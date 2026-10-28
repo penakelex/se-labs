@@ -1,9 +1,9 @@
-package com.example.types;
+package org.nstu.se.lab2.types;
 
-public class RxIntegerValue {
+public final class RxIntegerValue {
     private final int value;
 
-    public RxIntegerValue(int value) {
+    public RxIntegerValue(final int value) {
         this.value = value;
     }
 
