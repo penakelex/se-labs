@@ -17,7 +17,8 @@
     <module name="LineLength">
         <!-- Keep in sync with max_line_length in .editorconfig -->
         <property name="max" value="100"/>
-        <property name="ignorePattern" value="^package.*|^import.*|a href|href|http://|https://|ftp://"/>
+        <property name="ignorePattern"
+                  value="^package.*|^import.*|a href|href|http://|https://|ftp://"/>
     </module>
 
     <module name="TreeWalker">

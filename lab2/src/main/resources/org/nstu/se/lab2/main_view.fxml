@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="org.nstu.se.lab2.ui.MainController"
+      styleClass="root-pane">
+    <Label text="%rx.title" styleClass="screen-title"/>
+    <Label text="%rx.subtitle" styleClass="muted-caption"/>
+
+    <HBox styleClass="toolbar">
+        <Label text="%rx.label.service" styleClass="field-label"/>
+        <ComboBox fx:id="serviceSelector" styleClass="service-selector"
+                  HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+    </HBox>
+
+    <TableView fx:id="methodsTable" styleClass="methods-table" prefHeight="240.0">
+        <columns>
+            <TableColumn fx:id="methodNameColumn" text="%rx.table.method"/>
+            <TableColumn fx:id="methodInfoColumn" text="%rx.table.description"/>
+            <TableColumn fx:id="methodParamsColumn" text="%rx.table.parameters"/>
+        </columns>
+    </TableView>
+
+    <VBox styleClass="form-group">
+        <Label text="%rx.label.request" styleClass="field-label"/>
+        <TextField fx:id="requestArea" styleClass="request-area"
+                   promptText="%rx.request.prompt"/>
+    </VBox>
+
+    <HBox styleClass="action-row">
+        <Button fx:id="sendButton" text="%rx.button.send" onAction="#sendRequest"
+                defaultButton="true" styleClass="primary-button"/>
+        <ProgressIndicator fx:id="progress" styleClass="send-progress"/>
+        <Label fx:id="statusLabel" text="%rx.status.ready" styleClass="status-label"/>
+    </HBox>
+
+    <VBox styleClass="log-group" VBox.vgrow="ALWAYS">
+        <Label text="%rx.label.log" styleClass="field-label"/>
+        <TextArea fx:id="logArea" styleClass="log-area" editable="false"
+                  VBox.vgrow="ALWAYS"/>
+    </VBox>
+</VBox>

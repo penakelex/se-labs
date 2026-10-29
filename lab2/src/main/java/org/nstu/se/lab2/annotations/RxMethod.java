@@ -9,5 +9,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface RxMethod {
     String info() default "";
+
     String name();
 }

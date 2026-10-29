@@ -1,4 +1,4 @@
-package org.nstu.se.lab2.core;
+package org.nstu.se.lab2.core.exceptions;
 
 import java.io.Serial;
 

@@ -1,8 +1,8 @@
-package org.nstu.se.lab2.core;
+package org.nstu.se.lab2.core.exceptions;
 
 import java.io.Serial;
 
-public class RxInvocationException extends RuntimeException {
+public final class RxInvocationException extends RuntimeException {
     @Serial private static final long serialVersionUID = 1L;
 
     public RxInvocationException(final String message, final Throwable cause) {
