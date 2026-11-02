@@ -2,7 +2,7 @@ package org.nstu.se.lab2.services;
 
 import org.nstu.se.lab2.Messages;
 import org.nstu.se.lab2.annotations.RxMethod;
-import org.nstu.se.lab2.annotations.RxParam;
+import org.nstu.se.lab2.annotations.RxParameter;
 import org.nstu.se.lab2.core.RxService;
 import org.nstu.se.lab2.core.convert.Converters;
 
@@ -26,18 +26,18 @@ public final class TextService implements ServiceEntry {
 
     @RxMethod(name = "concat", info = "left + right")
     public String concat(
-            @RxParam(name = "left") final String left,
-            @RxParam(name = "right") final String right) {
+            @RxParameter(name = "left") final String left,
+            @RxParameter(name = "right") final String right) {
         return left + right;
     }
 
     @RxMethod(name = "upper", info = "upper case")
-    public String upper(@RxParam(name = "text") final String text) {
+    public String upper(@RxParameter(name = "text") final String text) {
         return text.toUpperCase(Locale.ROOT);
     }
 
     @RxMethod(name = "length", info = "text length")
-    public int length(@RxParam(name = "text") final String text) {
+    public int length(@RxParameter(name = "text") final String text) {
         return text.length();
     }
 }

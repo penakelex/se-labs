@@ -1,7 +1,7 @@
 package org.nstu.se.lab2.core.reflection;
 
 import org.jspecify.annotations.Nullable;
-import org.nstu.se.lab2.annotations.RxParam;
+import org.nstu.se.lab2.annotations.RxParameter;
 import org.nstu.se.lab2.core.convert.ValueConverter;
 import org.nstu.se.lab2.core.exceptions.ConverterException;
 import org.nstu.se.lab2.core.exceptions.RxException;
@@ -30,7 +30,7 @@ public final class ArgumentBinder {
         final var used = new HashSet<String>();
 
         for (var index = 0; index < parameters.length; index++) {
-            final var rxParam = parameters[index].getAnnotation(RxParam.class);
+            final var rxParam = parameters[index].getAnnotation(RxParameter.class);
 
             if (rxParam == null) {
                 args[index] = defaultValue(parameters[index].getType());

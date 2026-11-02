@@ -6,7 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.nstu.se.lab2.annotations.RxMethod;
-import org.nstu.se.lab2.annotations.RxParam;
+import org.nstu.se.lab2.annotations.RxParameter;
 import org.nstu.se.lab2.core.exceptions.RxException;
 import org.nstu.se.lab2.services.SumService;
 
@@ -109,7 +109,9 @@ class RxServiceScanTest {
 
     static final class DuplicateParams {
         @RxMethod(name = "method")
-        void method(@RxParam(name = "x") final int left, @RxParam(name = "x") final int right) {}
+        void method(
+                @RxParameter(name = "x") final int left,
+                @RxParameter(name = "x") final int right) {}
     }
 
     static final class EmptyName {

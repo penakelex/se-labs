@@ -1,7 +1,7 @@
 package org.nstu.se.lab2.core.reflection;
 
 import org.nstu.se.lab2.annotations.RxMethod;
-import org.nstu.se.lab2.annotations.RxParam;
+import org.nstu.se.lab2.annotations.RxParameter;
 import org.nstu.se.lab2.core.MethodDescriptor;
 import org.nstu.se.lab2.core.ParameterDescriptor;
 import org.nstu.se.lab2.core.exceptions.RxException;
@@ -105,7 +105,7 @@ public final class ServiceScanner {
         final var seenNames = new HashSet<String>();
 
         for (final var parameter : method.getParameters()) {
-            final var rxParam = parameter.getAnnotation(RxParam.class);
+            final var rxParam = parameter.getAnnotation(RxParameter.class);
             if (rxParam == null) {
                 continue;
             }

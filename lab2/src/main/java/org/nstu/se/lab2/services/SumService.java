@@ -3,7 +3,7 @@ package org.nstu.se.lab2.services;
 import org.jspecify.annotations.Nullable;
 import org.nstu.se.lab2.Messages;
 import org.nstu.se.lab2.annotations.RxMethod;
-import org.nstu.se.lab2.annotations.RxParam;
+import org.nstu.se.lab2.annotations.RxParameter;
 import org.nstu.se.lab2.core.RxService;
 import org.nstu.se.lab2.core.convert.Converters;
 import org.nstu.se.lab2.core.exceptions.RxException;
@@ -30,9 +30,9 @@ public final class SumService implements ServiceEntry {
     @RxMethod(name = "sum", info = "output = sum of 3 inputs")
     public void sum(
             final String signature,
-            @RxParam(name = "inp1") final int first,
-            @RxParam(name = "inp2") final int second,
-            @RxParam(name = "inp3") final int third)
+            @RxParameter(name = "inp1") final int first,
+            @RxParameter(name = "inp2") final int second,
+            @RxParameter(name = "inp3") final int third)
             throws RxException {
         if (first < 0 || second < 0 || third < 0) {
             throw new RxException("Отрицательные входы не поддерживаются");

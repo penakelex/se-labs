@@ -8,7 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.nstu.se.lab2.annotations.RxMethod;
-import org.nstu.se.lab2.annotations.RxParam;
+import org.nstu.se.lab2.annotations.RxParameter;
 import org.nstu.se.lab2.services.SumService;
 
 import java.util.concurrent.CancellationException;
@@ -147,7 +147,7 @@ class RxServiceInvocationTest {
 
         @RxMethod(name = "info")
         String info(
-                @RxParam(name = "value") final int value,
+                @RxParameter(name = "value") final int value,
                 final int zero,
                 final String nil,
                 final boolean flag) {
@@ -168,7 +168,7 @@ class RxServiceInvocationTest {
         }
 
         @RxMethod(name = "slow")
-        String slow(@RxParam(name = "millis") final int millis) throws InterruptedException {
+        String slow(@RxParameter(name = "millis") final int millis) throws InterruptedException {
             startedLatch.countDown();
             releaseLatch.await(millis, TimeUnit.MILLISECONDS);
             return OK_RESULT;
@@ -177,7 +177,7 @@ class RxServiceInvocationTest {
 
     static final class StaticService {
         @RxMethod(name = "twice")
-        static int twice(@RxParam(name = "value") final int value) {
+        static int twice(@RxParameter(name = "value") final int value) {
             return value * 2;
         }
     }

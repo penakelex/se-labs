@@ -22,7 +22,8 @@ se-labs/
 │  └─ libs.versions.toml  # Единый каталог версий (JavaFX, JUnit и т.д.)
 ├─ .githooks/           # Git-хуки (pre-commit, pre-push)
 ├─ .github/workflows/   # CI на GitHub Actions
-├─ lab1/                # Лабораторная работа № 1
+├─ lab1/                # Лабораторная работа № 1 — аниматор сортировки
+├─ lab2/                # Лабораторная работа № 2 — RxService
 ├─ settings.gradle.kts
 ├─ build.gradle.kts
 └─ gradlew, gradlew.bat
@@ -38,7 +39,8 @@ se-labs/
 ./gradlew check
 
 # 3. Запустить конкретную лабу
-./gradlew :lab1:run
+./gradlew :lab1:run    # аниматор сортировки
+./gradlew :lab2:run    # RxService
 ```
 
 ## Основные команды
@@ -48,17 +50,26 @@ se-labs/
 | `./gradlew check`         | Все тесты + Checkstyle + PMD + SpotBugs                  |
 | `./gradlew test`          | Только тесты                                             |
 | `./gradlew :lab1:run`     | Запуск приложения из lab1                                |
+| `./gradlew :lab2:run`     | Запуск приложения из lab2                                |
 | `./gradlew :lab1:check`   | Проверки только для lab1                                 |
+| `./gradlew :lab2:check`   | Проверки только для lab2                                 |
 | `./gradlew spotlessApply` | Автоформат всего кода (Google Java Format, 100 символов) |
 | `./gradlew spotlessCheck` | Проверить формат, ничего не менять                       |
 | `./gradlew installHooks`  | Активировать git-хуки                                    |
 | `./gradlew clean`         | Удалить все сборочные артефакты                          |
 
+## Лабораторные работы
+
+| № | Тема                                                                    | README                             |
+|---|-------------------------------------------------------------------------|------------------------------------|
+| 1 | Аниматор сортировки с динамической разметкой                            | [lab1/README.md](./lab1/README.md) |
+| 2 | Асинхронный вызов методов через аннотации (`@RxMethod`, `@RxParameter`) | [lab2/README.md](./lab2/README.md) |
+
 ## Стандарты кода
 
 - **Формат**: [Google Java Format](https://github.com/google/google-java-format), 4 пробела, 100
   символов в строке, LF.
-- **Проверки**: Checkstyle, PMD, SpotBugs, Error Prone.
+- **Проверки**: Checkstyle, PMD, SpotBugs, Error Prone, Spotless.
 - **Версия Java**: 25+ (toolchain).
 - **JavaFX**: 27.
 
@@ -84,7 +95,6 @@ se-labs/
        id("se-labs.javafx-conventions")   // если нужен JavaFX
        id("se-labs.test-conventions")
        id("se-labs.quality-conventions")
-       application
    }
 
    application {
@@ -95,7 +105,4 @@ se-labs/
 3. Добавить `include("labN")` в `settings.gradle.kts`.
 4. Исходники — в `labN/src/main/java/org/nstu/se/labN/`, ресурсы — в
    `labN/src/main/resources/org/nstu/se/labN/`.
-
-## Полезные ссылки
-
-- [lab1/README.md](./lab1/README.md)
+5. Завести `labN/README.md` и добавить ссылку в таблицу «Лабораторные работы».

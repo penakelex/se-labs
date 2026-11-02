@@ -7,7 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.nstu.se.lab2.annotations.RxMethod;
-import org.nstu.se.lab2.annotations.RxParam;
+import org.nstu.se.lab2.annotations.RxParameter;
 import org.nstu.se.lab2.core.exceptions.ConverterException;
 import org.nstu.se.lab2.core.exceptions.RxException;
 import org.nstu.se.lab2.services.SumService;
@@ -67,7 +67,7 @@ class RxServiceConverterTest {
 
     static final class WithCustomType {
         @RxMethod(name = "methodCustom")
-        String methodCustom(@RxParam(name = "value") final LocalDate value) {
+        String methodCustom(@RxParameter(name = "value") final LocalDate value) {
             return value.toString();
         }
     }

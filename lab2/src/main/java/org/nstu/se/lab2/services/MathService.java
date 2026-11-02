@@ -2,7 +2,7 @@ package org.nstu.se.lab2.services;
 
 import org.nstu.se.lab2.Messages;
 import org.nstu.se.lab2.annotations.RxMethod;
-import org.nstu.se.lab2.annotations.RxParam;
+import org.nstu.se.lab2.annotations.RxParameter;
 import org.nstu.se.lab2.core.RxService;
 import org.nstu.se.lab2.core.convert.Converters;
 import org.nstu.se.lab2.core.exceptions.RxInvocationException;
@@ -26,12 +26,13 @@ public final class MathService implements ServiceEntry {
 
     @RxMethod(name = "pow", info = "base ^ exponent")
     public double pow(
-            @RxParam(name = "base") final double base, @RxParam(name = "exp") final double exp) {
+            @RxParameter(name = "base") final double base,
+            @RxParameter(name = "exp") final double exp) {
         return Math.pow(base, exp);
     }
 
     @RxMethod(name = "sqrt", info = "square root")
-    public double sqrt(@RxParam(name = "value") final double value) {
+    public double sqrt(@RxParameter(name = "value") final double value) {
         if (value < 0) {
             throw new ArithmeticException("Корень из отрицательного числа");
         }
@@ -39,7 +40,7 @@ public final class MathService implements ServiceEntry {
     }
 
     @RxMethod(name = "sleep", info = "пауза в миллисекундах")
-    public String sleep(@RxParam(name = "ms") final int millis) {
+    public String sleep(@RxParameter(name = "ms") final int millis) {
         try {
             Thread.sleep(millis);
         } catch (final InterruptedException exception) {
