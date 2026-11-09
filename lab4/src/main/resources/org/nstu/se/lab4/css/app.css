@@ -1,0 +1,77 @@
+.root {
+    -fx-font-family: "Segoe UI", "Inter", "Helvetica Neue", sans-serif;
+    -fx-font-size: 14px;
+    -fx-background-color: linear-gradient(to bottom right, #eef2ff 0%, #f8fafc 55%, #ecfeff 100%);
+}
+
+.main-pane {
+    -fx-padding: 24;
+    -fx-spacing: 16;
+}
+
+.screen-title {
+    -fx-font-size: 22px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #0f172a;
+}
+
+.waveform-view {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-border-color: #e2e8f0;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.05), 12, 0.05, 0, 4);
+}
+
+.control-row {
+    -fx-spacing: 12;
+    -fx-alignment: center-left;
+}
+
+.primary-button {
+    -fx-background-radius: 8;
+    -fx-background-color: linear-gradient(to bottom, #6366f1, #4f46e5);
+    -fx-text-fill: white;
+    -fx-font-weight: 600;
+    -fx-padding: 8 24;
+    -fx-cursor: hand;
+}
+
+.secondary-button {
+    -fx-background-radius: 8;
+    -fx-background-color: #e2e8f0;
+    -fx-text-fill: #334155;
+    -fx-font-weight: 600;
+    -fx-padding: 8 24;
+    -fx-cursor: hand;
+}
+
+.field-label {
+    -fx-text-fill: #334155;
+    -fx-font-weight: 600;
+}
+
+.value-label {
+    -fx-text-fill: #1e293b;
+    -fx-font-weight: 600;
+    -fx-min-width: 80;
+}
+
+.sample-label {
+    -fx-text-fill: #475569;
+    -fx-font-weight: 600;
+}
+
+.seek-slider {
+    -fx-pref-width: 400;
+}
+
+.amplitude-slider,
+.delay-slider {
+    -fx-pref-width: 120;
+}
+
+.source-selector {
+    -fx-pref-width: 100;
+}

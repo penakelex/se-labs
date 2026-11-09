@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import org.nstu.se.lab4.ui.WaveformView?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="org.nstu.se.lab4.ui.MainController"
+      styleClass="main-pane">
+    <Label text="%window.title" styleClass="screen-title"/>
+    <WaveformView fx:id="waveformView" styleClass="waveform-view" VBox.vgrow="ALWAYS"/>
+
+    <HBox styleClass="control-row">
+        <Button fx:id="playPauseButton" text="%button.play" onAction="#togglePlayPause"
+                styleClass="primary-button"/>
+        <Button fx:id="stopButton" text="%button.stop" onAction="#stop"
+                styleClass="secondary-button"/>
+        <Slider fx:id="seekSlider" styleClass="seek-slider" HBox.hgrow="ALWAYS"/>
+        <Label fx:id="timeLabel" styleClass="value-label"/>
+    </HBox>
+
+    <HBox styleClass="control-row">
+        <Label text="%label.source" styleClass="field-label"/>
+        <ComboBox fx:id="sourceSelector" styleClass="source-selector"/>
+        <Label text="%label.amplitude" styleClass="field-label"/>
+        <Slider fx:id="amplitudeSlider" styleClass="amplitude-slider"/>
+        <Label fx:id="amplitudeValueLabel" styleClass="value-label"/>
+        <Label text="%label.delay" styleClass="field-label"/>
+        <Slider fx:id="delaySlider" styleClass="delay-slider"/>
+        <Label fx:id="delayValueLabel" styleClass="value-label"/>
+    </HBox>
+
+    <HBox styleClass="control-row">
+        <Label fx:id="sampleLabel" styleClass="sample-label"/>
+    </HBox>
+</VBox>
