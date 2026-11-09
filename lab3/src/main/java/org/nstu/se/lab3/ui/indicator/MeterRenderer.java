@@ -1,5 +1,6 @@
 package org.nstu.se.lab3.ui.indicator;
 
+import javafx.beans.binding.Bindings;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
@@ -76,6 +77,16 @@ final class MeterRenderer {
     void bindHeightTo(final Region track, final DoubleSupplier decibelsSupplier) {
         background.heightProperty().unbind();
         background.heightProperty().bind(track.heightProperty());
+
+        final var trackOffset =
+                Bindings.createDoubleBinding(
+                        () -> track.getBoundsInParent().getMaxY() - container.getHeight(),
+                        track.boundsInParentProperty(),
+                        container.heightProperty());
+
+        background.translateYProperty().bind(trackOffset);
+        bar.translateYProperty().bind(trackOffset);
+
         track.heightProperty().addListener((_, _, _) -> render(decibelsSupplier.getAsDouble()));
         render(decibelsSupplier.getAsDouble());
     }
