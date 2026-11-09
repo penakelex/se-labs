@@ -1,0 +1,57 @@
+.level-pane {
+    -fx-background-color: rgba(255, 255, 255, 0.9);
+    -fx-background-radius: 16;
+    -fx-border-radius: 16;
+    -fx-border-color: #e2e8f0;
+    -fx-border-width: 1;
+    -fx-padding: 18;
+    -fx-spacing: 15;
+    -fx-alignment: center;
+    -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.08), 18, 0.08, 0, 6);
+}
+
+.level-value {
+    -fx-font-size: 18px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #047857;
+}
+
+.level-decibels {
+    -fx-font-size: 16px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #334155;
+}
+
+.meter-caption {
+    -fx-font-size: 12px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #334155;
+}
+
+.meter-background {
+    -fx-arc-width: 6;
+    -fx-arc-height: 6;
+    -fx-fill: #1e293b;
+    -fx-effect: innershadow(gaussian, rgba(0, 0, 0, 0.6), 6, 0.1, 0, 2);
+}
+
+.meter-bar {
+    -fx-arc-width: 6;
+    -fx-arc-height: 6;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 4, 0.1, 0, 2);
+}
+
+.mixer-box {
+    -fx-spacing: 20;
+    -fx-alignment: center;
+}
+
+.slider-box,
+.meter-box {
+    -fx-spacing: 5;
+    -fx-alignment: center;
+}
+
+.meter-group {
+    -fx-alignment: bottom-center;
+}

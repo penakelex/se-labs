@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+
+<GridPane xmlns="http://javafx.com/javafx"
+          xmlns:fx="http://javafx.com/fxml"
+          fx:controller="org.nstu.se.lab3.ui.settings.SettingsController"
+          styleClass="settings-grid">
+    <columnConstraints>
+        <ColumnConstraints minWidth="100" />
+        <ColumnConstraints hgrow="ALWAYS" />
+    </columnConstraints>
+
+    <Label text="%settings.zeroLevel" styleClass="field-label"
+           GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+    <TextField fx:id="zeroLevelField" styleClass="settings-field"
+               GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+    <Label text="%settings.minDecibels" styleClass="field-label"
+           GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+    <TextField fx:id="minDecibelsField" styleClass="settings-field"
+               GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+    <Label text="%settings.maxDecibels" styleClass="field-label"
+           GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+    <TextField fx:id="maxDecibelsField" styleClass="settings-field"
+               GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+    <Label text="%settings.period" styleClass="field-label"
+           GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+    <TextField fx:id="periodField" styleClass="settings-field"
+               GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+    <Label text="%settings.maxHistory" styleClass="field-label"
+           GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+    <TextField fx:id="maxHistoryField" styleClass="settings-field"
+               GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+</GridPane>

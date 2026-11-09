@@ -1,0 +1,45 @@
+.root {
+    -fx-font-family: "Segoe UI", "Inter", "Helvetica Neue", sans-serif;
+    -fx-font-size: 14px;
+    -fx-background-color: linear-gradient(to bottom right,
+    #eef2ff 0%, #f8fafc 55%, #ecfeff 100%);
+    -fx-accent: #6366f1;
+    -fx-focus-color: #6366f1;
+    -fx-faint-focus-color: transparent;
+}
+
+.scroll-bar:vertical {
+    -fx-pref-width: 12;
+    -fx-background-color: transparent;
+    -fx-padding: 0 2 0 2;
+}
+
+.scroll-bar:vertical .track {
+    -fx-background-color: #e2e8f0;
+    -fx-background-radius: 6;
+}
+
+.scroll-bar:vertical .thumb {
+    -fx-background-color: #cbd5e1;
+    -fx-background-radius: 6;
+}
+
+.scroll-bar:vertical .thumb:hover {
+    -fx-background-color: #94a3b8;
+}
+
+.scroll-bar:vertical .increment-button,
+.scroll-bar:vertical .decrement-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+.scroll-bar:vertical .increment-arrow,
+.scroll-bar:vertical .decrement-arrow {
+    -fx-shape: " ";
+    -fx-padding: 0;
+}
+
+.scroll-bar .corner {
+    -fx-background-color: transparent;
+}

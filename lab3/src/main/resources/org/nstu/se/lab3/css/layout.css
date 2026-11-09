@@ -1,0 +1,63 @@
+.main-split-pane {
+    -fx-background-color: transparent;
+    -fx-padding: 12;
+}
+
+.main-split-pane:focused {
+    -fx-background-insets: 0;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+.main-split-pane > .split-pane-divider {
+    -fx-background-color: transparent;
+    -fx-padding: 0 5 0 5;
+}
+
+.main-split-pane > .split-pane-divider:hover {
+    -fx-background-color: #cbd5e1;
+    -fx-background-insets: 0 4 0 4;
+}
+
+.settings-pane {
+    -fx-background-color: rgba(255, 255, 255, 0.9);
+    -fx-background-radius: 16;
+    -fx-border-radius: 16;
+    -fx-border-color: #e2e8f0;
+    -fx-border-width: 1;
+    -fx-padding: 18;
+    -fx-spacing: 12;
+    -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.08), 18, 0.08, 0, 6);
+}
+
+.settings-grid {
+    -fx-hgap: 8;
+    -fx-vgap: 8;
+}
+
+.pane-title {
+    -fx-font-size: 17px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #0f172a;
+}
+
+.field-label {
+    -fx-text-fill: #334155;
+    -fx-font-weight: 600;
+}
+
+.level-container {
+    -fx-min-width: 250;
+    -fx-alignment: center;
+    -fx-padding: 0 4 0 4;
+}
+
+.arrow-icon {
+    -fx-font-size: 10px;
+    -fx-text-fill: #334155;
+    -fx-padding: 0 0 0 8;
+}
+
+.toggle-button:selected .arrow-icon {
+    -fx-text-fill: white;
+}

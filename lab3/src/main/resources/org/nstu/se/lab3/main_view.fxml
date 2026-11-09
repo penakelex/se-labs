@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<SplitPane fx:id="mainSplitPane" xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml"
+           fx:controller="org.nstu.se.lab3.ui.MainController"
+           styleClass="main-split-pane" dividerPositions="0.3">
+
+    <VBox fx:id="settingsPane" styleClass="settings-pane" minWidth="220" maxWidth="400">
+        <Label text="%settings.title" styleClass="pane-title"/>
+
+        <fx:include fx:id="settingsForm" source="settings.fxml"/>
+
+        <ToggleButton fx:id="historyToggle" text="%settings.history"
+                      styleClass="toggle-button" maxWidth="Infinity" contentDisplay="RIGHT">
+            <graphic>
+                <Label fx:id="historyArrow" text="▼" styleClass="arrow-icon" />
+            </graphic>
+        </ToggleButton>
+
+        <VBox fx:id="historyPane" styleClass="history-pane"
+              VBox.vgrow="ALWAYS" visible="false" managed="false">
+            <Label fx:id="historyTotalLabel" styleClass="history-subtitle"/>
+            <ListView fx:id="historyList" styleClass="history-list" VBox.vgrow="ALWAYS"/>
+        </VBox>
+    </VBox>
+
+    <HBox fx:id="levelContainer" styleClass="level-container"/>
+</SplitPane>

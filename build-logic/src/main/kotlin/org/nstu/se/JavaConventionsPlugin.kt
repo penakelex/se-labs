@@ -39,6 +39,8 @@ class JavaConventionsPlugin : Plugin<Project> {
         target.dependencies.add("errorprone", libs.findLibrary("nullaway").get())
         target.dependencies.add("compileOnly", libs.findLibrary("jspecify").get())
         target.dependencies.add("testCompileOnly", libs.findLibrary("jspecify").get())
+        target.dependencies.add("compileOnly", libs.findLibrary("spotbugs-annotations").get())
+        target.dependencies.add("testCompileOnly", libs.findLibrary("spotbugs-annotations").get())
 
         val nullawayEnabled = target.providers.gradleProperty("nullaway").orNull != "false"
 

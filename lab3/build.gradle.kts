@@ -1,9 +1,17 @@
 plugins {
-    id("se-labs.javafx-conventions")   // если нужен JavaFX
+    id("se-labs.javafx-conventions")
     id("se-labs.test-conventions")
     id("se-labs.quality-conventions")
 }
 
 application {
-    mainClass.set("org.nstu.se.labN.Main")
+    mainClass.set("org.nstu.se.lab3.Launcher")
+}
+
+dependencies {
+    pmdAux(
+        javaToolchains.launcherFor(java.toolchain)
+            .map { it.metadata.installationPath }
+            .map { it.files("lib/jrt-fs.jar") }
+    )
 }

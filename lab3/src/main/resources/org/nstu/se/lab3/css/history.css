@@ -1,0 +1,74 @@
+.history-pane {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 10 0 0 0;
+    -fx-spacing: 8;
+}
+
+.history-subtitle {
+    -fx-font-size: 14px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #64748b;
+}
+
+.history-list {
+    -fx-background-color: white;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-border-color: #e2e8f0;
+    -fx-border-width: 1.5;
+    -fx-padding: 1;
+}
+
+.history-list .list-cell {
+    -fx-padding: 6 10;
+    -fx-text-fill: #334155;
+    -fx-background-color: transparent;
+}
+
+.history-list .list-cell:filled:hover {
+    -fx-background-color: #eef2ff;
+}
+
+.history-list .list-cell:filled:selected {
+    -fx-background-color: #e0e7ff;
+    -fx-text-fill: #4f46e5;
+}
+
+.history-list .scroll-bar:horizontal {
+    -fx-pref-height: 12;
+    -fx-background-color: transparent;
+    -fx-padding: 2 0 2 0;
+}
+
+.history-list .scroll-bar:horizontal .track {
+    -fx-background-color: #e2e8f0;
+    -fx-background-radius: 6;
+}
+
+.history-list .scroll-bar:horizontal .thumb {
+    -fx-background-color: #cbd5e1;
+    -fx-background-radius: 6;
+}
+
+.history-list .scroll-bar:horizontal .thumb:hover {
+    -fx-background-color: #94a3b8;
+}
+
+.history-list .scroll-bar:horizontal .increment-button,
+.history-list .scroll-bar:horizontal .decrement-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+.history-list .scroll-bar:horizontal .increment-arrow,
+.history-list .scroll-bar:horizontal .decrement-arrow {
+    -fx-shape: " ";
+    -fx-padding: 0;
+}
+
+.history-list .scroll-bar:horizontal {
+    -fx-opacity: 0;
+    -fx-max-height: 0;
+    -fx-pref-height: 0;
+}

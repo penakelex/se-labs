@@ -1,0 +1,55 @@
+.settings-field {
+    -fx-min-width: 80;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-border-color: #e2e8f0;
+    -fx-border-width: 1.2;
+    -fx-background-color: white;
+    -fx-padding: 6 10;
+    -fx-text-fill: #0f172a;
+}
+
+.settings-field:focused {
+    -fx-border-color: #6366f1;
+    -fx-effect: dropshadow(gaussian, rgba(99, 102, 241, 0.3), 10, 0.15, 0, 0);
+}
+
+.toggle-button {
+    -fx-max-width: infinity;
+    -fx-background-radius: 9;
+    -fx-background-color: #e2e8f0;
+    -fx-text-fill: #334155;
+    -fx-font-weight: 600;
+    -fx-padding: 8 16;
+    -fx-cursor: hand;
+}
+
+.toggle-button:hover {
+    -fx-background-color: #cbd5e1;
+}
+
+.toggle-button:selected {
+    -fx-background-color: #6366f1;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, rgba(99, 102, 241, 0.35), 12, 0.12, 0, 3);
+}
+
+.level-slider {
+    -fx-orientation: vertical;
+    -fx-show-tick-marks: true;
+    -fx-show-tick-labels: true;
+    -fx-padding: 0;
+}
+
+.level-slider .track {
+    -fx-background-color: #e2e8f0;
+    -fx-background-radius: 4;
+}
+
+.level-slider .thumb {
+    -fx-background-color: white;
+    -fx-border-color: #6366f1;
+    -fx-border-width: 2;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+}
