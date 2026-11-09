@@ -2,6 +2,7 @@ package org.nstu.se.lab4.audio;
 
 public final class SignalProcessor implements SignalSource {
     private static final double MIN_AMPLITUDE = 0.0;
+    private static final double MAX_AMPLITUDE = 1.0;
     private static final double MIN_DELAY_SECONDS = 0.0;
 
     private final SignalSource source;
@@ -10,12 +11,14 @@ public final class SignalProcessor implements SignalSource {
 
     public SignalProcessor(
             final SignalSource source, final double amplitude, final double delaySeconds) {
-        if (amplitude < MIN_AMPLITUDE) {
-            throw new IllegalArgumentException("Amplitude must be non-negative");
+        if (amplitude < MIN_AMPLITUDE || amplitude > MAX_AMPLITUDE) {
+            throw new IllegalArgumentException("Amplitude must be between 0.0 and 1.0");
         }
+
         if (delaySeconds < MIN_DELAY_SECONDS) {
             throw new IllegalArgumentException("Delay must be non-negative");
         }
+
         this.source = source;
         this.amplitude = amplitude;
         this.delaySamples = (int) Math.round(delaySeconds * source.getSampleRate());
@@ -24,9 +27,11 @@ public final class SignalProcessor implements SignalSource {
     @Override
     public float getSample(final int index) {
         final var sourceIndex = index - delaySamples;
+
         if (sourceIndex < 0 || sourceIndex >= source.getSampleCount()) {
             return 0.0f;
         }
+
         return (float) (amplitude * source.getSample(sourceIndex));
     }
 

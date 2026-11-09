@@ -31,6 +31,7 @@ public final class WaveSource implements SignalSource {
             if (input == null) {
                 throw new IllegalArgumentException("Resource not found: " + path);
             }
+
             try (var buffered = new BufferedInputStream(input);
                     var audio = AudioSystem.getAudioInputStream(buffered)) {
                 return fromAudioStream(audio);
@@ -45,16 +46,17 @@ public final class WaveSource implements SignalSource {
         final var count = (int) Math.round(durationSeconds * sampleRate);
         final var samples = new float[count];
         final var fadeCount = Math.max(1, (int) Math.round(FADE_SECONDS * sampleRate));
+
         for (var index = 0; index < count; index++) {
             final var fadeIn = Math.min(1.0, (double) index / fadeCount);
             final var fadeOut = Math.min(1.0, (double) (count - 1 - index) / fadeCount);
             final var envelope = Math.min(fadeIn, fadeOut);
             samples[index] = (float) (Math.sin(TWO_PI * frequency * index / sampleRate) * envelope);
         }
+
         return new WaveSource(samples, sampleRate);
     }
 
-    @SuppressWarnings("PMD.LawOfDemeter")
     private static WaveSource fromAudioStream(final AudioInputStream audio) throws IOException {
         final var format = audio.getFormat();
         final var frameLength = audio.getFrameLength();
@@ -70,10 +72,13 @@ public final class WaveSource implements SignalSource {
 
         while (sampleIndex < samples.length) {
             final var read = audio.read(buffer);
+
             if (read <= 0) {
                 break;
             }
+
             final var frames = read / frameSize;
+
             for (var frame = 0; frame < frames && sampleIndex < samples.length; frame++) {
                 final var offset = frame * frameSize;
                 samples[sampleIndex] = readSample(buffer, offset, format);
@@ -97,9 +102,11 @@ public final class WaveSource implements SignalSource {
         }
 
         var sum = firstChannel;
+
         for (var channel = MONO_CHANNEL_COUNT; channel < channels; channel++) {
             sum += readChannel(buffer, offset + channel * sampleSize, sampleSize, bigEndian);
         }
+
         return sum / channels;
     }
 
@@ -108,7 +115,9 @@ public final class WaveSource implements SignalSource {
         if (sampleSize == BYTE_SAMPLE_SIZE) {
             return (buffer[offset] & BYTE_MASK) / BYTE_DIVISOR - 1.0f;
         }
+
         var value = 0L;
+
         if (bigEndian) {
             for (var index = 0; index < sampleSize; index++) {
                 value = (value << BITS_PER_BYTE) | (buffer[offset + index] & BYTE_MASK);
@@ -118,6 +127,7 @@ public final class WaveSource implements SignalSource {
                 value = (value << BITS_PER_BYTE) | (buffer[offset + index] & BYTE_MASK);
             }
         }
+
         final var bits = sampleSize * BITS_PER_BYTE;
         final var shift = Long.SIZE - bits;
         value = value << shift >> shift;
@@ -130,6 +140,7 @@ public final class WaveSource implements SignalSource {
         if (index < 0 || index >= samples.length) {
             return 0.0f;
         }
+
         return samples[index];
     }
 

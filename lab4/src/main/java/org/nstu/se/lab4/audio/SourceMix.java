@@ -12,18 +12,22 @@ public final class SourceMix implements SignalSource {
     @Override
     public float getSample(final int index) {
         var sum = 0.0f;
+
         for (final var channel : channels) {
             sum += channel.sample(index);
         }
+
         return Math.clamp(sum, -1.0f, 1.0f);
     }
 
     @Override
     public int getSampleCount() {
         var maximum = 0;
+
         for (final var channel : channels) {
             maximum = Math.max(maximum, channel.count());
         }
+
         return maximum;
     }
 
@@ -38,9 +42,11 @@ public final class SourceMix implements SignalSource {
     public record Channel(SignalSource source, double amplitude, int delaySamples) {
         float sample(final int index) {
             final var sourceIndex = index - delaySamples;
+
             if (sourceIndex < 0 || sourceIndex >= source.getSampleCount()) {
                 return 0.0f;
             }
+
             return (float) (amplitude * source.getSample(sourceIndex));
         }
 

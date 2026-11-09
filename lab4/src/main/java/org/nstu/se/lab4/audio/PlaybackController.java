@@ -44,13 +44,16 @@ public final class PlaybackController {
     public void rebuildAudio() {
         currentMix = buildMix();
         final var sampleRate = currentMix.getSampleRate();
+
         if (sampleRate <= 0) {
             throw new IllegalStateException("Source sample rate must be positive");
         }
+
         try {
             if (clip != null && clip.isOpen()) {
                 clip.close();
             }
+
             final var format =
                     new AudioFormat(sampleRate, BITS_PER_SAMPLE, CHANNELS, SIGNED, BIG_ENDIAN);
             final var data = encode(currentMix);
@@ -65,9 +68,11 @@ public final class PlaybackController {
         if (clip == null) {
             return;
         }
+
         if (clip.getMicrosecondPosition() >= clip.getMicrosecondLength()) {
             clip.setMicrosecondPosition(0);
         }
+
         clip.start();
     }
 
@@ -88,6 +93,7 @@ public final class PlaybackController {
         if (clip == null) {
             return;
         }
+
         final var clampedSeconds = Math.clamp(seconds, 0.0, getDurationSeconds());
         clip.setMicrosecondPosition((long) (clampedSeconds * 1_000_000));
     }
@@ -100,12 +106,14 @@ public final class PlaybackController {
 
     private SourceMix buildMix() {
         final var channels = new java.util.ArrayList<SourceMix.Channel>(settings.getSourceCount());
+
         for (final var channel : settings.channels()) {
             final var delaySamples =
                     (int) Math.round(channel.delaySeconds() * channel.source().getSampleRate());
             channels.add(
                     new SourceMix.Channel(channel.source(), channel.amplitude(), delaySamples));
         }
+
         return new SourceMix(channels);
     }
 
@@ -124,11 +132,13 @@ public final class PlaybackController {
     private static byte[] encode(final SignalSource source) {
         final var sampleCount = source.getSampleCount();
         final var data = new byte[sampleCount * 2];
+
         for (var index = 0; index < sampleCount; index++) {
             final var value = (short) Math.round(source.getSample(index) * Short.MAX_VALUE);
             data[index * 2] = (byte) (value & 0xFF);
             data[index * 2 + 1] = (byte) ((value >> 8) & 0xFF);
         }
+
         return data;
     }
 }

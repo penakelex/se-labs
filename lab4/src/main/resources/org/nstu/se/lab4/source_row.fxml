@@ -11,9 +11,11 @@
 
     <Label fx:id="nameLabel" styleClass="field-label"/>
 
+    <Label fx:id="amplitudeLabel" styleClass="field-label"/>
     <Slider fx:id="amplitudeSlider" styleClass="amplitude-slider"/>
     <Label fx:id="amplitudeValueLabel" styleClass="value-label"/>
 
+    <Label fx:id="delayLabel" styleClass="field-label"/>
     <Slider fx:id="delaySlider" styleClass="delay-slider"/>
     <Label fx:id="delayValueLabel" styleClass="value-label"/>
 </HBox>

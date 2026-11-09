@@ -88,6 +88,7 @@ public final class MainController implements Initializable {
 
     private HBox loadSourceRow(final int index) {
         final var loader = new FXMLLoader(ResourcePaths.url(ResourcePaths.SOURCE_ROW_VIEW));
+
         try {
             final var row = (HBox) loader.load();
             final var rowController = (SourceRowController) loader.getController();
@@ -102,27 +103,33 @@ public final class MainController implements Initializable {
         final var state = controller.getState();
         final var position = Math.min(state.positionSeconds(), state.durationSeconds());
         controller.rebuildAudio();
+
         final var rebuilt = controller.getState();
         seekSlider.setMax(rebuilt.durationSeconds());
         controller.seek(position);
         seekSlider.setValue(position);
+
         if (state.playing()) {
             controller.play();
         }
+
         waveformView.setSource(rebuilt.signalSource());
     }
 
     private void tick() {
         final var state = controller.getState();
         final double position;
+
         if (state.playing() && !isSeeking) {
             position = state.positionSeconds();
             seekSlider.setValue(position);
         } else {
             position = seekSlider.getValue();
         }
+
         timeLabel.setText(Messages.format(KEY_TIME_FORMAT, position, state.durationSeconds()));
         waveformView.setPosition(position);
+
         if (wasPlaying
                 && !state.playing()
                 && position >= state.durationSeconds() - END_TOLERANCE_SECONDS) {
@@ -132,6 +139,7 @@ public final class MainController implements Initializable {
                             KEY_TIME_FORMAT, state.durationSeconds(), state.durationSeconds()));
             waveformView.setPosition(state.durationSeconds());
         }
+
         wasPlaying = state.playing();
         updatePlayPauseButton();
     }
@@ -143,6 +151,7 @@ public final class MainController implements Initializable {
         } else {
             controller.play();
         }
+
         updatePlayPauseButton();
     }
 
