@@ -18,10 +18,26 @@ hs_err_pid*
 
 # Gradle
 .gradle/
+.kotlin/
 build/
 !gradle/wrapper/gradle-wrapper.jar
-!**/src/**/build/
 
 # Logs and temporary files
 *.log
 out/
+
+# Maven-remains
+target/
+
+# Eclipse
+.classpath
+.project
+.settings/
+.factorypath
+
+# NetBeans
+nbproject/private/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
