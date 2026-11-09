@@ -16,6 +16,7 @@ public final class WaveSource implements SignalSource {
     private static final int BYTE_MASK = 0xFF;
     private static final float BYTE_DIVISOR = 128.0f;
     private static final int BUFFER_FRAMES = 1024;
+    private static final double FADE_SECONDS = 0.01;
 
     private final float[] samples;
     private final int sampleRate;
@@ -43,11 +44,13 @@ public final class WaveSource implements SignalSource {
             final double frequency, final double durationSeconds, final int sampleRate) {
         final var count = (int) Math.round(durationSeconds * sampleRate);
         final var samples = new float[count];
-
+        final var fadeCount = Math.max(1, (int) Math.round(FADE_SECONDS * sampleRate));
         for (var index = 0; index < count; index++) {
-            samples[index] = (float) Math.sin(TWO_PI * frequency * index / sampleRate);
+            final var fadeIn = Math.min(1.0, (double) index / fadeCount);
+            final var fadeOut = Math.min(1.0, (double) (count - 1 - index) / fadeCount);
+            final var envelope = Math.min(fadeIn, fadeOut);
+            samples[index] = (float) (Math.sin(TWO_PI * frequency * index / sampleRate) * envelope);
         }
-
         return new WaveSource(samples, sampleRate);
     }
 
@@ -105,7 +108,7 @@ public final class WaveSource implements SignalSource {
         if (sampleSize == BYTE_SAMPLE_SIZE) {
             return (buffer[offset] & BYTE_MASK) / BYTE_DIVISOR - 1.0f;
         }
-        var value = 0;
+        var value = 0L;
         if (bigEndian) {
             for (var index = 0; index < sampleSize; index++) {
                 value = (value << BITS_PER_BYTE) | (buffer[offset + index] & BYTE_MASK);
@@ -116,8 +119,10 @@ public final class WaveSource implements SignalSource {
             }
         }
         final var bits = sampleSize * BITS_PER_BYTE;
-        final var max = (float) Math.pow(2, bits - 1);
-        return value / max;
+        final var shift = Long.SIZE - bits;
+        value = value << shift >> shift;
+        final var maximum = (float) Math.pow(2, bits - 1);
+        return value / maximum;
     }
 
     @Override

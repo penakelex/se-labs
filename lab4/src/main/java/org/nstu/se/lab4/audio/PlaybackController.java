@@ -1,145 +1,134 @@
 package org.nstu.se.lab4.audio;
 
-import org.nstu.se.lab4.audio.event.PlaybackListener;
-import org.nstu.se.lab4.audio.event.PlaybackState;
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicLong;
+public final class PlaybackController {
+    private static final int BITS_PER_SAMPLE = 16;
+    private static final int CHANNELS = 1;
+    private static final boolean SIGNED = true;
+    private static final boolean BIG_ENDIAN = false;
 
-public final class PlaybackController implements SignalSource {
-    private static final int UPDATE_INTERVAL_MILLIS = 50;
-    private static final int DEFAULT_SAMPLE_RATE = 44_100;
-    private static final double DEFAULT_DURATION_SECONDS = 5.0;
-    private static final long NANOS_PER_SECOND = 1_000_000_000L;
+    private MixSettings settings = MixSettings.createDefault();
+    private SourceMix currentMix;
+    private Clip clip;
 
-    private final SourceMix sourceMix = new SourceMix();
-    private final PlaybackListener listener;
-    private final ScheduledExecutorService scheduler;
-    private final ScheduledFuture<?> tickingTask;
-    private final AtomicBoolean playing = new AtomicBoolean(false);
-    private final AtomicLong positionNanos = new AtomicLong(0);
-    private final AtomicLong lastNanos = new AtomicLong(System.nanoTime());
-    private final long durationNanos;
-
-    public PlaybackController(final PlaybackListener listener) {
-        this.listener = listener;
-        this.durationNanos = (long) (DEFAULT_DURATION_SECONDS * NANOS_PER_SECOND);
-        this.scheduler =
-                Executors.newSingleThreadScheduledExecutor(
-                        runnable -> {
-                            final var thread = new Thread(runnable, "playback-thread");
-                            thread.setDaemon(true);
-                            return thread;
-                        });
-        this.tickingTask =
-                scheduler.scheduleAtFixedRate(
-                        this::tick,
-                        UPDATE_INTERVAL_MILLIS,
-                        UPDATE_INTERVAL_MILLIS,
-                        TimeUnit.MILLISECONDS);
+    public PlaybackController() {
+        rebuildAudio();
     }
 
-    public int getSourceCount() {
-        return sourceMix.getSourceCount();
+    public record State(
+            double positionSeconds,
+            double durationSeconds,
+            boolean playing,
+            SourceMix signalSource) {}
+
+    public State getState() {
+        return new State(getPositionSeconds(), getDurationSeconds(), isPlaying(), currentMix);
     }
 
-    public double getAmplitude(final int index) {
-        return sourceMix.getAmplitude(index);
+    public MixSettings getSettings() {
+        return settings;
     }
 
-    public void setAmplitude(final int index, final double amplitude) {
-        sourceMix.setAmplitude(index, amplitude);
+    public void updateAmplitude(final int index, final double amplitude) {
+        settings = settings.withAmplitude(index, amplitude);
     }
 
-    public double getDelaySeconds(final int index) {
-        return sourceMix.getDelaySeconds(index);
+    public void updateDelaySeconds(final int index, final double delaySeconds) {
+        settings = settings.withDelaySeconds(index, delaySeconds);
     }
 
-    public void setDelaySeconds(final int index, final double delaySeconds) {
-        sourceMix.setDelaySeconds(index, delaySeconds);
-    }
-
-    public double getDurationSeconds() {
-        return (double) durationNanos / NANOS_PER_SECOND;
-    }
-
-    public boolean isPlaying() {
-        return playing.get();
+    public void rebuildAudio() {
+        currentMix = buildMix();
+        final var sampleRate = currentMix.getSampleRate();
+        if (sampleRate <= 0) {
+            throw new IllegalStateException("Source sample rate must be positive");
+        }
+        try {
+            if (clip != null && clip.isOpen()) {
+                clip.close();
+            }
+            final var format =
+                    new AudioFormat(sampleRate, BITS_PER_SAMPLE, CHANNELS, SIGNED, BIG_ENDIAN);
+            final var data = encode(currentMix);
+            clip = AudioSystem.getClip();
+            clip.open(format, data, 0, data.length);
+        } catch (final LineUnavailableException exception) {
+            throw new IllegalStateException("Cannot open audio line", exception);
+        }
     }
 
     public void play() {
-        playing.set(true);
+        if (clip == null) {
+            return;
+        }
+        if (clip.getMicrosecondPosition() >= clip.getMicrosecondLength()) {
+            clip.setMicrosecondPosition(0);
+        }
+        clip.start();
     }
 
     public void pause() {
-        playing.set(false);
+        if (clip != null) {
+            clip.stop();
+        }
     }
 
     public void stop() {
-        playing.set(false);
-        positionNanos.set(0);
-        notifyState();
+        if (clip != null) {
+            clip.stop();
+            clip.setMicrosecondPosition(0);
+        }
     }
 
     public void seek(final double seconds) {
-        final var clamped = Math.clamp(seconds, 0.0, getDurationSeconds());
-        positionNanos.set((long) (clamped * NANOS_PER_SECOND));
-        notifyState();
+        if (clip == null) {
+            return;
+        }
+        final var clampedSeconds = Math.clamp(seconds, 0.0, getDurationSeconds());
+        clip.setMicrosecondPosition((long) (clampedSeconds * 1_000_000));
     }
 
     public void shutdown() {
-        tickingTask.cancel(true);
-        scheduler.shutdownNow();
-    }
-
-    @Override
-    public float getSample(final int index) {
-        return sourceMix.getSample(index);
-    }
-
-    @Override
-    public int getSampleCount() {
-        return sourceMix.getSampleCount();
-    }
-
-    @Override
-    public int getSampleRate() {
-        return sourceMix.getSampleRate();
-    }
-
-    private void tick() {
-        final var nowNanos = System.nanoTime();
-        final var elapsedNanos = nowNanos - lastNanos.getAndSet(nowNanos);
-        advance(elapsedNanos);
-        notifyState();
-    }
-
-    private void advance(final long elapsedNanos) {
-        if (!playing.get()) {
-            return;
-        }
-        final var current = positionNanos.get();
-        final var updated = current + elapsedNanos;
-        if (updated >= durationNanos) {
-            if (positionNanos.compareAndSet(current, durationNanos)) {
-                playing.set(false);
-                listener.onPlaybackFinished();
-            }
-        } else {
-            positionNanos.compareAndSet(current, updated);
+        if (clip != null) {
+            clip.close();
         }
     }
 
-    private void notifyState() {
-        final var currentNanos = positionNanos.get();
-        final var seconds = (double) currentNanos / NANOS_PER_SECOND;
-        final var sampleIndex = (int) Math.round(seconds * DEFAULT_SAMPLE_RATE);
-        final var sample = sourceMix.getSample(sampleIndex);
-        listener.onPlaybackState(
-                new PlaybackState(seconds, getDurationSeconds(), sample, playing.get()));
+    private SourceMix buildMix() {
+        final var channels = new java.util.ArrayList<SourceMix.Channel>(settings.getSourceCount());
+        for (final var channel : settings.channels()) {
+            final var delaySamples =
+                    (int) Math.round(channel.delaySeconds() * channel.source().getSampleRate());
+            channels.add(
+                    new SourceMix.Channel(channel.source(), channel.amplitude(), delaySamples));
+        }
+        return new SourceMix(channels);
+    }
+
+    private double getPositionSeconds() {
+        return clip == null ? 0.0 : clip.getMicrosecondPosition() / 1_000_000.0;
+    }
+
+    private double getDurationSeconds() {
+        return clip == null ? 0.0 : clip.getMicrosecondLength() / 1_000_000.0;
+    }
+
+    private boolean isPlaying() {
+        return clip != null && clip.isRunning();
+    }
+
+    private static byte[] encode(final SignalSource source) {
+        final var sampleCount = source.getSampleCount();
+        final var data = new byte[sampleCount * 2];
+        for (var index = 0; index < sampleCount; index++) {
+            final var value = (short) Math.round(source.getSample(index) * Short.MAX_VALUE);
+            data[index * 2] = (byte) (value & 0xFF);
+            data[index * 2 + 1] = (byte) ((value >> 8) & 0xFF);
+        }
+        return data;
     }
 }

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.layout.HBox?>
+
+<HBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="org.nstu.se.lab4.ui.SourceRowController"
+      styleClass="control-row">
+
+    <Label fx:id="nameLabel" styleClass="field-label"/>
+
+    <Slider fx:id="amplitudeSlider" styleClass="amplitude-slider"/>
+    <Label fx:id="amplitudeValueLabel" styleClass="value-label"/>
+
+    <Slider fx:id="delaySlider" styleClass="delay-slider"/>
+    <Label fx:id="delayValueLabel" styleClass="value-label"/>
+</HBox>

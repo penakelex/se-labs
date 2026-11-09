@@ -9,6 +9,5 @@ module org.nstu.se.sound {
 
     exports org.nstu.se.lab4;
     exports org.nstu.se.lab4.audio;
-    exports org.nstu.se.lab4.audio.event;
     exports org.nstu.se.lab4.ui;
 }

@@ -3,6 +3,7 @@ package org.nstu.se.lab4.ui;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 
 import org.jspecify.annotations.Nullable;
 import org.nstu.se.lab4.audio.SignalSource;
@@ -21,6 +22,14 @@ public final class WaveformView extends Pane {
 
     public WaveformView() {
         super();
+
+        final var clip = new Rectangle();
+        clip.widthProperty().bind(widthProperty());
+        clip.heightProperty().bind(heightProperty());
+        clip.setArcWidth(24.0);
+        clip.setArcHeight(24.0);
+        setClip(clip);
+
         getChildren().addAll(waveformCanvas, overlayCanvas);
     }
 
@@ -37,7 +46,11 @@ public final class WaveformView extends Pane {
     }
 
     public void refresh() {
+        if (source != null) {
+            durationSeconds = (double) source.getSampleCount() / source.getSampleRate();
+        }
         drawWaveform();
+        drawPlayhead();
     }
 
     @Override
@@ -68,33 +81,21 @@ public final class WaveformView extends Pane {
         final var centerY = height / 2.0;
         final var amplitude = height * WAVEFORM_HEIGHT_RATIO / 2.0;
         final var sampleCount = source.getSampleCount();
-        final var samplesPerPixel = Math.max(1, sampleCount / (int) width);
 
         graphics.setStroke(WAVEFORM_COLOR);
-        graphics.setLineWidth(1.0);
+        graphics.setLineWidth(1.5);
         graphics.beginPath();
 
         for (var pixel = 0; pixel < (int) width; pixel++) {
-            final var startSample = pixel * samplesPerPixel;
-            if (startSample >= sampleCount) {
-                break;
+            final var sampleIndex = (int) ((double) pixel / width * sampleCount);
+            final var sample = source.getSample(sampleIndex);
+            final var sampleY = centerY - sample * amplitude;
+
+            if (pixel == 0) {
+                graphics.moveTo(pixel, sampleY);
+            } else {
+                graphics.lineTo(pixel, sampleY);
             }
-            final var endSample = Math.min(startSample + samplesPerPixel, sampleCount);
-
-            var min = 1.0f;
-            var max = -1.0f;
-
-            for (var sampleIndex = startSample; sampleIndex < endSample; sampleIndex++) {
-                final var sample = source.getSample(sampleIndex);
-                min = Math.min(min, sample);
-                max = Math.max(max, sample);
-            }
-
-            final var yMin = centerY - max * amplitude;
-            final var yMax = centerY - min * amplitude;
-
-            graphics.moveTo(pixel, yMin);
-            graphics.lineTo(pixel, yMax);
         }
 
         graphics.stroke();

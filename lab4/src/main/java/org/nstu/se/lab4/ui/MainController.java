@@ -1,146 +1,171 @@
 package org.nstu.se.lab4.ui;
 
-import javafx.application.Platform;
+import javafx.animation.AnimationTimer;
+import javafx.animation.PauseTransition;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.util.Duration;
 
 import org.nstu.se.lab4.Messages;
+import org.nstu.se.lab4.ResourcePaths;
 import org.nstu.se.lab4.audio.PlaybackController;
-import org.nstu.se.lab4.audio.event.PlaybackListener;
-import org.nstu.se.lab4.audio.event.PlaybackState;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
 @SuppressWarnings("NullAway.Init")
-public final class MainController implements Initializable, PlaybackListener {
-    private static final double AMPLITUDE_MIN = 0.0;
-    private static final double AMPLITUDE_MAX = 1.0;
-    private static final double DELAY_MIN = 0.0;
-    private static final double DELAY_MAX = 0.5;
-
+public final class MainController implements Initializable {
     private static final String KEY_TIME_FORMAT = "time.format";
-    private static final String KEY_SAMPLE_FORMAT = "sample.format";
     private static final String KEY_BUTTON_PLAY = "button.play";
     private static final String KEY_BUTTON_PAUSE = "button.pause";
-    private static final String KEY_AMPLITUDE_VALUE = "amplitude.value";
-    private static final String KEY_DELAY_VALUE = "delay.value";
-    private static final String KEY_SOURCE_NAME = "source.name";
+    private static final double END_TOLERANCE_SECONDS = 0.1;
 
+    @FXML private VBox mainPane;
     @FXML private WaveformView waveformView;
     @FXML private Button playPauseButton;
     @FXML private Slider seekSlider;
     @FXML private Label timeLabel;
-    @FXML private Label sampleLabel;
-    @FXML private ComboBox<String> sourceSelector;
-    @FXML private Slider amplitudeSlider;
-    @FXML private Slider delaySlider;
-    @FXML private Label amplitudeValueLabel;
-    @FXML private Label delayValueLabel;
+    @FXML private VBox sourceControls;
 
-    private final PlaybackController controller = new PlaybackController(this);
-    private int selectedSourceIndex;
+    private final PlaybackController controller = new PlaybackController();
+    private final PauseTransition rebuildDebounce = new PauseTransition(Duration.millis(100));
+
+    private boolean isSeeking;
+    private boolean wasPlaying;
+
+    private final AnimationTimer timer =
+            new AnimationTimer() {
+                @Override
+                public void handle(final long now) {
+                    tick();
+                }
+            };
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        waveformView.setSource(controller);
+        buildSourceControls();
 
-        for (var index = 0; index < controller.getSourceCount(); index++) {
-            sourceSelector.getItems().add(Messages.format(KEY_SOURCE_NAME, index + 1));
-        }
-        sourceSelector.getSelectionModel().selectFirst();
-        sourceSelector.valueProperty().addListener((_, _, _) -> updateSourceControls());
+        mainPane.addEventFilter(
+                KeyEvent.KEY_PRESSED,
+                event -> {
+                    if (event.getCode() == KeyCode.ESCAPE) {
+                        mainPane.requestFocus();
+                    }
+                });
 
+        final var state = controller.getState();
         seekSlider.setMin(0.0);
-        seekSlider.setMax(controller.getDurationSeconds());
-        seekSlider
-                .valueChangingProperty()
-                .addListener(
-                        (_, _, changing) -> {
-                            if (!changing) {
-                                controller.seek(seekSlider.getValue());
-                            }
-                        });
+        seekSlider.setMax(state.durationSeconds());
+        seekSlider.setOnMousePressed(_ -> isSeeking = true);
+        seekSlider.setOnMouseReleased(
+                _ -> {
+                    isSeeking = false;
+                    controller.seek(seekSlider.getValue());
+                });
 
-        amplitudeSlider.setMin(AMPLITUDE_MIN);
-        amplitudeSlider.setMax(AMPLITUDE_MAX);
-        amplitudeSlider
-                .valueProperty()
-                .addListener(
-                        (_, _, newValue) -> {
-                            controller.setAmplitude(selectedSourceIndex, newValue.doubleValue());
-                            amplitudeValueLabel.setText(
-                                    Messages.format(KEY_AMPLITUDE_VALUE, newValue.doubleValue()));
-                            waveformView.refresh();
-                        });
+        rebuildDebounce.setOnFinished(_ -> rebuildAudioAndWaveform());
 
-        delaySlider.setMin(DELAY_MIN);
-        delaySlider.setMax(DELAY_MAX);
-        delaySlider
-                .valueProperty()
-                .addListener(
-                        (_, _, newValue) -> {
-                            controller.setDelaySeconds(selectedSourceIndex, newValue.doubleValue());
-                            delayValueLabel.setText(
-                                    Messages.format(KEY_DELAY_VALUE, newValue.doubleValue()));
-                            waveformView.refresh();
-                        });
+        timeLabel.setText(Messages.format(KEY_TIME_FORMAT, 0.0, state.durationSeconds()));
+        waveformView.setSource(state.signalSource());
 
-        timeLabel.setText(Messages.format(KEY_TIME_FORMAT, 0.0, controller.getDurationSeconds()));
-        sampleLabel.setText(Messages.format(KEY_SAMPLE_FORMAT, 0.0));
-
-        updateSourceControls();
+        timer.start();
     }
 
-    private void updateSourceControls() {
-        selectedSourceIndex = sourceSelector.getSelectionModel().getSelectedIndex();
-        amplitudeSlider.setValue(controller.getAmplitude(selectedSourceIndex));
-        delaySlider.setValue(controller.getDelaySeconds(selectedSourceIndex));
+    private void buildSourceControls() {
+        for (var index = 0; index < controller.getSettings().getSourceCount(); index++) {
+            sourceControls.getChildren().add(loadSourceRow(index));
+        }
+    }
+
+    private HBox loadSourceRow(final int index) {
+        final var loader = new FXMLLoader(ResourcePaths.url(ResourcePaths.SOURCE_ROW_VIEW));
+        try {
+            final var row = (HBox) loader.load();
+            final var rowController = (SourceRowController) loader.getController();
+            rowController.configure(index, controller, rebuildDebounce::playFromStart);
+            return row;
+        } catch (final IOException exception) {
+            throw new IllegalStateException("Cannot load source row", exception);
+        }
+    }
+
+    private void rebuildAudioAndWaveform() {
+        final var state = controller.getState();
+        final var position = Math.min(state.positionSeconds(), state.durationSeconds());
+        controller.rebuildAudio();
+        final var rebuilt = controller.getState();
+        seekSlider.setMax(rebuilt.durationSeconds());
+        controller.seek(position);
+        seekSlider.setValue(position);
+        if (state.playing()) {
+            controller.play();
+        }
+        waveformView.setSource(rebuilt.signalSource());
+    }
+
+    private void tick() {
+        final var state = controller.getState();
+        final double position;
+        if (state.playing() && !isSeeking) {
+            position = state.positionSeconds();
+            seekSlider.setValue(position);
+        } else {
+            position = seekSlider.getValue();
+        }
+        timeLabel.setText(Messages.format(KEY_TIME_FORMAT, position, state.durationSeconds()));
+        waveformView.setPosition(position);
+        if (wasPlaying
+                && !state.playing()
+                && position >= state.durationSeconds() - END_TOLERANCE_SECONDS) {
+            seekSlider.setValue(state.durationSeconds());
+            timeLabel.setText(
+                    Messages.format(
+                            KEY_TIME_FORMAT, state.durationSeconds(), state.durationSeconds()));
+            waveformView.setPosition(state.durationSeconds());
+        }
+        wasPlaying = state.playing();
+        updatePlayPauseButton();
     }
 
     @FXML
     public void togglePlayPause() {
-        if (controller.isPlaying()) {
+        if (controller.getState().playing()) {
             controller.pause();
         } else {
             controller.play();
         }
+        updatePlayPauseButton();
     }
 
     @FXML
     public void stop() {
         controller.stop();
+        seekSlider.setValue(0.0);
+        timeLabel.setText(
+                Messages.format(KEY_TIME_FORMAT, 0.0, controller.getState().durationSeconds()));
+        waveformView.setPosition(0.0);
+        updatePlayPauseButton();
     }
 
-    @Override
-    public void onPlaybackState(final PlaybackState state) {
-        Platform.runLater(
-                () -> {
-                    seekSlider.setValue(state.positionSeconds());
-                    timeLabel.setText(
-                            Messages.format(
-                                    KEY_TIME_FORMAT,
-                                    state.positionSeconds(),
-                                    state.durationSeconds()));
-                    sampleLabel.setText(Messages.format(KEY_SAMPLE_FORMAT, state.currentSample()));
-                    waveformView.setPosition(state.positionSeconds());
-                    playPauseButton.setText(
-                            state.playing()
-                                    ? Messages.get(KEY_BUTTON_PAUSE)
-                                    : Messages.get(KEY_BUTTON_PLAY));
-                });
-    }
-
-    @Override
-    public void onPlaybackFinished() {
-        Platform.runLater(() -> playPauseButton.setText(Messages.get(KEY_BUTTON_PLAY)));
+    private void updatePlayPauseButton() {
+        playPauseButton.setText(
+                controller.getState().playing()
+                        ? Messages.get(KEY_BUTTON_PAUSE)
+                        : Messages.get(KEY_BUTTON_PLAY));
     }
 
     public void shutdown() {
+        timer.stop();
+        rebuildDebounce.stop();
         controller.shutdown();
     }
 }

@@ -4,7 +4,7 @@ import java.text.MessageFormat;
 import java.util.ResourceBundle;
 
 public final class Messages {
-    public static final String BUNDLE_NAME = "org.nstu.se.sound.app";
+    public static final String BUNDLE_NAME = "org.nstu.se.lab4.app";
 
     private static final ResourceBundle BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
 

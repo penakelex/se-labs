@@ -23,6 +23,12 @@
     <rule ref="category/java/errorprone.xml">
     </rule>
 
+    <rule ref="category/java/codestyle.xml/LawOfDemeter">
+        <properties>
+            <property name="trustRadius" value="1"/>
+        </properties>
+    </rule>
+
     <rule ref="category/java/multithreading.xml">
         <!-- Desktop application -->
         <exclude name="DoNotUseThreads"/>

@@ -5,7 +5,7 @@ plugins {
 }
 
 application {
-    mainClass = "org.nstu.se.sound.Launcher"
+    mainClass = "org.nstu.se.lab4.Launcher"
 }
 
 dependencies {
