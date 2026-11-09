@@ -25,6 +25,7 @@ se-labs/
 ├─ lab1/                # Лабораторная работа № 1 — аниматор сортировки
 ├─ lab2/                # Лабораторная работа № 2 — RxService
 ├─ lab3/                # Лабораторная работа № 3 — динамический элемент GUI (дБ-индикатор)
+├─ lab4/                # Лабораторная работа № 4 — звуковая волна (Observer + Proxy)
 ├─ settings.gradle.kts
 ├─ build.gradle.kts
 └─ gradlew, gradlew.bat
@@ -43,6 +44,7 @@ se-labs/
 ./gradlew :lab1:run    # аниматор сортировки
 ./gradlew :lab2:run    # RxService
 ./gradlew :lab3:run    # логарифмический индикатор уровня (дБ)
+./gradlew :lab4:run    # звуковая волна с микшированием
 ```
 
 ## Основные команды
@@ -54,9 +56,11 @@ se-labs/
 | `./gradlew :lab1:run`     | Запуск приложения из lab1                                |
 | `./gradlew :lab2:run`     | Запуск приложения из lab2                                |
 | `./gradlew :lab3:run`     | Запуск приложения из lab3                                |
+| `./gradlew :lab4:run`     | Запуск приложения из lab4                                |
 | `./gradlew :lab1:check`   | Проверки только для lab1                                 |
 | `./gradlew :lab2:check`   | Проверки только для lab2                                 |
 | `./gradlew :lab3:check`   | Проверки только для lab3                                 |
+| `./gradlew :lab4:check`   | Проверки только для lab4                                 |
 | `./gradlew spotlessApply` | Автоформат всего кода (Google Java Format, 100 символов) |
 | `./gradlew spotlessCheck` | Проверить формат, ничего не менять                       |
 | `./gradlew installHooks`  | Активировать git-хуки                                    |
@@ -69,6 +73,7 @@ se-labs/
 | 1 | Аниматор сортировки с динамической разметкой                            | [lab1/README.md](./lab1/README.md) |
 | 2 | Асинхронный вызов методов через аннотации (`@RxMethod`, `@RxParameter`) | [lab2/README.md](./lab2/README.md) |
 | 3 | Элемент GUI с динамическим поведением (Индикатор уровня в дБ)           | [lab3/README.md](./lab3/README.md) |
+| 4 | Модель с подпиской на события: звуковая волна (Observer + Proxy + Mix)  | [lab4/README.md](./lab4/README.md) |
 
 ## Стандарты кода
 
@@ -97,13 +102,13 @@ se-labs/
 
    ```kotlin
    plugins {
-       id("se-labs.javafx-conventions")   // если нужен JavaFX
-       id("se-labs.test-conventions")
-       id("se-labs.quality-conventions")
+	   id("se-labs.javafx-conventions")   // если нужен JavaFX
+	   id("se-labs.test-conventions")
+	   id("se-labs.quality-conventions")
    }
 
    application {
-       mainClass.set("org.nstu.se.labN.Main")
+	   mainClass.set("org.nstu.se.labN.Main")
    }
    ```
 
