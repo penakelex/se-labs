@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.within;
 
 import org.junit.jupiter.api.Test;
+import org.nstu.se.lab4.audio.source.WaveSource;
 
 final class WaveSourceTest {
     private static final int SAMPLE_RATE = 100;

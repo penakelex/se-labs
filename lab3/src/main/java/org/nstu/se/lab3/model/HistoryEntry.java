@@ -1,3 +1,3 @@
 package org.nstu.se.lab3.model;
 
-public record HistoryEntry(int identifier, int value) {}
+public record HistoryEntry(int identifier, int value, double decibels) {}

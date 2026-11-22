@@ -34,6 +34,11 @@
     -fx-effect: dropshadow(gaussian, rgba(99, 102, 241, 0.35), 12, 0.12, 0, 3);
 }
 
+.generation-toggle {
+    -fx-max-width: infinity;
+    -fx-margin: 0 0 4 0;
+}
+
 .level-slider {
     -fx-orientation: vertical;
     -fx-show-tick-marks: true;

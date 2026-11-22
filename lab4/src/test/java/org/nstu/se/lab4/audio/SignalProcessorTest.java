@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.within;
 
 import org.junit.jupiter.api.Test;
+import org.nstu.se.lab4.audio.source.SignalProcessor;
 
 final class SignalProcessorTest {
     private static final float SAMPLE_TOLERANCE = 0.0001f;

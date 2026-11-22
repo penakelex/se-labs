@@ -5,4 +5,5 @@ public record SettingsValues(
         double minDecibels,
         double maxDecibels,
         int periodMillis,
-        int maxHistorySize) {}
+        int maxHistorySize,
+        double stepDb) {}

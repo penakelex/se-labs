@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import org.nstu.se.lab4.ui.WaveformView?>
+<?import org.nstu.se.lab4.ui.monitor.LevelMeterView?>
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="org.nstu.se.lab4.ui.monitor.SourceMonitorController"
+      styleClass="monitor-pane">
+
+    <HBox styleClass="control-row">
+        <ToggleButton fx:id="graphToggle" text="%monitor.graph" selected="true"
+                      styleClass="mode-toggle"/>
+        <ToggleButton fx:id="scaleToggle" text="%monitor.scale"
+                      styleClass="mode-toggle"/>
+    </HBox>
+
+    <StackPane VBox.vgrow="ALWAYS">
+        <WaveformView fx:id="waveformView" styleClass="waveform-view"/>
+        <LevelMeterView fx:id="meterView" styleClass="level-meter" visible="false" managed="false"/>
+    </StackPane>
+
+    <HBox styleClass="control-row">
+        <Button fx:id="playPauseButton" styleClass="primary-button"/>
+        <Button fx:id="stopButton" text="%button.stop"
+                styleClass="secondary-button"/>
+        <Slider fx:id="seekSlider" styleClass="seek-slider" HBox.hgrow="ALWAYS"/>
+        <Label fx:id="timeLabel" styleClass="value-label"/>
+    </HBox>
+</VBox>

@@ -6,6 +6,7 @@ import java.util.Objects;
 public final class ResourcePaths {
     public static final String MAIN_VIEW = "/org/nstu/se/lab4/main_view.fxml";
     public static final String SOURCE_ROW_VIEW = "/org/nstu/se/lab4/source_row.fxml";
+    public static final String SOURCE_MONITOR_VIEW = "/org/nstu/se/lab4/source_monitor.fxml";
     public static final String APP_CSS = "/org/nstu/se/lab4/css/app.css";
 
     private ResourcePaths() {}

@@ -13,9 +13,12 @@ import org.jspecify.annotations.Nullable;
 import org.nstu.se.lab3.Messages;
 import org.nstu.se.lab3.listener.NextDataListener;
 import org.nstu.se.lab3.model.DataAccumulator;
+import org.nstu.se.lab3.model.DecibelRandomWalk;
 import org.nstu.se.lab3.model.LogScaleModel;
 import org.nstu.se.lab3.model.SettingsValues;
 import org.nstu.se.lab3.timer.DataPublisher;
+
+import java.util.random.RandomGenerator;
 
 public final class LogarithmicLevelPane extends VBox {
     private static final double METER_PADDING = 150.0;
@@ -26,8 +29,11 @@ public final class LogarithmicLevelPane extends VBox {
 
     private final LogScaleModel scaleModel;
     private final DataPublisher publisher;
+    private final DecibelRandomWalk randomWalk;
     private final Slider slider;
     private final MeterRenderer meterRenderer;
+
+    private boolean generationEnabled;
 
     public LogarithmicLevelPane(
             final SettingsValues settings,
@@ -37,6 +43,12 @@ public final class LogarithmicLevelPane extends VBox {
         this.scaleModel =
                 new LogScaleModel(
                         settings.zeroLevelValue(), settings.minDecibels(), settings.maxDecibels());
+        this.randomWalk =
+                new DecibelRandomWalk(
+                        RandomGenerator.getDefault(),
+                        settings.minDecibels(),
+                        settings.maxDecibels(),
+                        settings.stepDb());
 
         getStyleClass().add("level-pane");
 
@@ -45,8 +57,13 @@ public final class LogarithmicLevelPane extends VBox {
         this.slider = LevelWidgets.createSlider(scaleModel);
         this.meterRenderer = new MeterRenderer(scaleModel, valueLabel, decibelLabel);
 
+        final var generationToggle = LevelWidgets.createGenerationToggle();
+        generationToggle
+                .selectedProperty()
+                .addListener((_, _, isSelected) -> generationEnabled = isSelected);
+
         final var mixerBox = buildMixerBox();
-        getChildren().addAll(valueLabel, decibelLabel, mixerBox);
+        getChildren().addAll(generationToggle, valueLabel, decibelLabel, mixerBox);
 
         bindHeights();
         setupSliderSkinListener();
@@ -124,7 +141,8 @@ public final class LogarithmicLevelPane extends VBox {
                 settings.periodMillis(),
                 this::getCurrentValue,
                 value -> {
-                    accumulator.addValue(value);
+                    final var decibels = slider.getValue();
+                    accumulator.addValue(value, decibels);
                     if (dataListener != null) {
                         dataListener.onNextData(value);
                     }
@@ -132,6 +150,10 @@ public final class LogarithmicLevelPane extends VBox {
     }
 
     public int getCurrentValue() {
+        if (generationEnabled) {
+            slider.setValue(randomWalk.next(slider.getValue()));
+        }
+
         return scaleModel.calculateValueFromDecibels(slider.getValue());
     }
 

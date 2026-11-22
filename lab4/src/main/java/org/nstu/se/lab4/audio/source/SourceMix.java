@@ -1,4 +1,4 @@
-package org.nstu.se.lab4.audio;
+package org.nstu.se.lab4.audio.source;
 
 import java.util.List;
 

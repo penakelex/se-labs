@@ -1,4 +1,4 @@
-package org.nstu.se.lab4.audio;
+package org.nstu.se.lab4.audio.source;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -17,6 +17,7 @@ public final class WaveSource implements SignalSource {
     private static final float BYTE_DIVISOR = 128.0f;
     private static final int BUFFER_FRAMES = 1024;
     private static final double FADE_SECONDS = 0.01;
+    private static final String READ_ERROR_PREFIX = "Cannot read WAV: ";
 
     private final float[] samples;
     private final int sampleRate;
@@ -37,8 +38,21 @@ public final class WaveSource implements SignalSource {
                 return fromAudioStream(audio);
             }
         } catch (final UnsupportedAudioFileException | IOException exception) {
-            throw new IllegalArgumentException("Cannot read WAV: " + path, exception);
+            throw new IllegalArgumentException(READ_ERROR_PREFIX + path, exception);
         }
+    }
+
+    public static WaveSource fromFile(final java.nio.file.Path file) {
+        try (var audio = AudioSystem.getAudioInputStream(file.toFile())) {
+            return fromAudioStream(audio);
+        } catch (final UnsupportedAudioFileException | IOException exception) {
+            throw new IllegalArgumentException(READ_ERROR_PREFIX + file.getFileName(), exception);
+        }
+    }
+
+    public static WaveSource generateSilence(final double durationSeconds, final int sampleRate) {
+        final var count = (int) Math.round(durationSeconds * sampleRate);
+        return new WaveSource(new float[count], sampleRate);
     }
 
     public static WaveSource generateTone(

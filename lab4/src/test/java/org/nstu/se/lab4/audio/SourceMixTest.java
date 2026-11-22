@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
 
 import org.junit.jupiter.api.Test;
+import org.nstu.se.lab4.audio.source.SourceMix;
 
 import java.util.List;
 

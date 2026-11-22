@@ -10,12 +10,18 @@ public final class DataAccumulator {
     private final Deque<HistoryEntry> history = new ArrayDeque<>();
     private final Lock lock = new ReentrantLock();
     private int totalCount;
+    private int statsCount;
     private int maxSize;
+    private long sum;
+    private int minValue = Integer.MAX_VALUE;
+    private int maxValue = Integer.MIN_VALUE;
 
     public DataAccumulator(final int initialMaxSize) {
         this.maxSize = initialMaxSize;
         this.totalCount = 0;
     }
+
+    public record Stats(int count, int min, int max, double average) {}
 
     public void setMaxSize(final int newMaxSize) {
         lock.lock();
@@ -28,13 +34,31 @@ public final class DataAccumulator {
         }
     }
 
-    public void addValue(final int value) {
+    public void addValue(final int value, final double decibels) {
         lock.lock();
 
         try {
             totalCount++;
-            history.addLast(new HistoryEntry(totalCount, value));
+            statsCount++;
+            history.addLast(new HistoryEntry(totalCount, value, decibels));
+            sum += value;
+            minValue = Math.min(minValue, value);
+            maxValue = Math.max(maxValue, value);
             trimToSize();
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public Stats getStats() {
+        lock.lock();
+
+        try {
+            if (statsCount == 0) {
+                return new Stats(0, 0, 0, 0.0);
+            }
+
+            return new Stats(statsCount, minValue, maxValue, (double) sum / statsCount);
         } finally {
             lock.unlock();
         }
@@ -55,6 +79,10 @@ public final class DataAccumulator {
 
         try {
             history.clear();
+            statsCount = 0;
+            sum = 0;
+            minValue = Integer.MAX_VALUE;
+            maxValue = Integer.MIN_VALUE;
         } finally {
             lock.unlock();
         }

@@ -6,7 +6,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 import org.jspecify.annotations.Nullable;
-import org.nstu.se.lab4.audio.SignalSource;
+import org.nstu.se.lab4.audio.source.SignalSource;
 
 public final class WaveformView extends Pane {
     private static final double WAVEFORM_HEIGHT_RATIO = 0.8;
@@ -78,27 +78,87 @@ public final class WaveformView extends Pane {
             return;
         }
 
+        final var envelope = computeEnvelope(source, (int) width, height);
+        drawEnvelope(graphics, envelope);
+    }
+
+    private static double[][] computeEnvelope(
+            final SignalSource source, final int pixels, final double height) {
         final var centerY = height / 2.0;
         final var amplitude = height * WAVEFORM_HEIGHT_RATIO / 2.0;
         final var sampleCount = source.getSampleCount();
+        final var envelope = new double[3][pixels];
+        var bucketStart = 0;
 
-        graphics.setStroke(WAVEFORM_COLOR);
-        graphics.setLineWidth(1.5);
-        graphics.beginPath();
+        for (var pixel = 0; pixel < pixels; pixel++) {
+            final var bucketEnd =
+                    Math.max(bucketStart + 1, (int) ((double) (pixel + 1) / pixels * sampleCount));
 
-        for (var pixel = 0; pixel < (int) width; pixel++) {
-            final var sampleIndex = (int) ((double) pixel / width * sampleCount);
-            final var sample = source.getSample(sampleIndex);
-            final var sampleY = centerY - sample * amplitude;
+            var minimum = Float.MAX_VALUE;
+            var maximum = -Float.MAX_VALUE;
+            final var firstSample = source.getSample(bucketStart);
 
-            if (pixel == 0) {
-                graphics.moveTo(pixel, sampleY);
-            } else {
-                graphics.lineTo(pixel, sampleY);
+            for (var index = bucketStart; index < bucketEnd && index < sampleCount; index++) {
+                final var sample = source.getSample(index);
+
+                if (sample < minimum) {
+                    minimum = sample;
+                }
+
+                if (sample > maximum) {
+                    maximum = sample;
+                }
             }
+
+            bucketStart = bucketEnd;
+            envelope[0][pixel] = centerY - minimum * amplitude;
+            envelope[1][pixel] = centerY - maximum * amplitude;
+            envelope[2][pixel] = centerY - firstSample * amplitude;
         }
 
+        return envelope;
+    }
+
+    private static void drawEnvelope(
+            final javafx.scene.canvas.GraphicsContext graphics, final double[]... envelope) {
+        final var minValues = envelope[0];
+        final var maxValues = envelope[1];
+        final var pixels = minValues.length;
+
+        graphics.setFill(WAVEFORM_COLOR.deriveColor(0, 1, 1, 0.25));
+        graphics.beginPath();
+        tracePath(graphics, maxValues);
+
+        for (var pixel = pixels - 1; pixel >= 0; pixel--) {
+            graphics.lineTo(pixel, minValues[pixel]);
+        }
+
+        graphics.closePath();
+        graphics.fill();
+
+        graphics.setStroke(WAVEFORM_COLOR);
+        graphics.setLineWidth(1.0);
+        graphics.beginPath();
+        tracePath(graphics, maxValues);
         graphics.stroke();
+
+        graphics.beginPath();
+        tracePath(graphics, minValues);
+        graphics.stroke();
+
+        graphics.setLineWidth(1.4);
+        graphics.beginPath();
+        tracePath(graphics, envelope[2]);
+        graphics.stroke();
+    }
+
+    private static void tracePath(
+            final javafx.scene.canvas.GraphicsContext graphics, final double... values) {
+        graphics.moveTo(0, values[0]);
+
+        for (var pixel = 1; pixel < values.length; pixel++) {
+            graphics.lineTo(pixel, values[pixel]);
+        }
     }
 
     private void drawPlayhead() {

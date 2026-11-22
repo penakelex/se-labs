@@ -38,4 +38,9 @@
            GridPane.rowIndex="4" GridPane.columnIndex="0"/>
     <TextField fx:id="maxHistoryField" styleClass="settings-field"
                GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+
+    <Label text="%settings.step" styleClass="field-label"
+           GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+    <TextField fx:id="stepDbField" styleClass="settings-field"
+               GridPane.rowIndex="5" GridPane.columnIndex="1"/>
 </GridPane>

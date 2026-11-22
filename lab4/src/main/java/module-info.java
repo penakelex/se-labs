@@ -3,11 +3,18 @@ module org.nstu.se.sound {
     requires javafx.fxml;
     requires java.desktop;
     requires static org.jspecify;
+    requires static com.github.spotbugs.annotations;
 
     opens org.nstu.se.lab4.ui to
             javafx.fxml;
+    opens org.nstu.se.lab4.ui.monitor to
+            javafx.fxml;
+    opens org.nstu.se.lab4.ui.dialog to
+            javafx.fxml;
 
     exports org.nstu.se.lab4;
-    exports org.nstu.se.lab4.audio;
+    exports org.nstu.se.lab4.audio.mix;
+    exports org.nstu.se.lab4.audio.playback;
+    exports org.nstu.se.lab4.audio.source;
     exports org.nstu.se.lab4.ui;
 }

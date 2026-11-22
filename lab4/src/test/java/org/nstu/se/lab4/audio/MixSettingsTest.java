@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.jupiter.api.Test;
+import org.nstu.se.lab4.audio.mix.MixSettings;
 
 final class MixSettingsTest {
     private static final double UPDATED_AMPLITUDE = 0.75;

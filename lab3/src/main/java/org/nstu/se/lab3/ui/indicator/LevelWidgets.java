@@ -2,10 +2,13 @@ package org.nstu.se.lab3.ui.indicator;
 
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import javafx.scene.control.ToggleButton;
 
+import org.nstu.se.lab3.Messages;
 import org.nstu.se.lab3.model.LogScaleModel;
 
 final class LevelWidgets {
+    private static final String KEY_GENERATION_TOGGLE = "level.generation";
     private static final double TICK_COUNT = 4.0;
 
     private LevelWidgets() {}
@@ -20,6 +23,13 @@ final class LevelWidgets {
         final var label = new Label();
         label.getStyleClass().add("level-decibels");
         return label;
+    }
+
+    static ToggleButton createGenerationToggle() {
+        final var toggle = new ToggleButton(Messages.get(KEY_GENERATION_TOGGLE));
+        toggle.getStyleClass().add("generation-toggle");
+        toggle.setMaxWidth(Double.MAX_VALUE);
+        return toggle;
     }
 
     static Slider createSlider(final LogScaleModel scale) {

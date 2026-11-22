@@ -148,7 +148,7 @@ public final class MainController implements Initializable {
 
     private void updateHistory() {
         if (historyToggle.isSelected()) {
-            historyManager.update(dataAccumulator.getAccumulatedData());
+            historyManager.update(dataAccumulator.getAccumulatedData(), dataAccumulator.getStats());
         }
     }
 }

@@ -1,4 +1,4 @@
-package org.nstu.se.lab4.audio;
+package org.nstu.se.lab4.audio.source;
 
 public final class SignalProcessor implements SignalSource {
     private static final double MIN_AMPLITUDE = 0.0;

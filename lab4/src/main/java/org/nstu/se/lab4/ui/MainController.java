@@ -1,9 +1,6 @@
 package org.nstu.se.lab4.ui;
 
-import javafx.animation.AnimationTimer;
-import javafx.animation.PauseTransition;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -12,13 +9,14 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.util.Duration;
 
 import org.nstu.se.lab4.Messages;
-import org.nstu.se.lab4.ResourcePaths;
-import org.nstu.se.lab4.audio.PlaybackController;
+import org.nstu.se.lab4.audio.playback.PlaybackController;
+import org.nstu.se.lab4.audio.source.WaveSource;
+import org.nstu.se.lab4.ui.dialog.AddToneDialog;
+import org.nstu.se.lab4.ui.dialog.SourceFileChooser;
+import org.nstu.se.lab4.ui.monitor.MonitorWindows;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -27,7 +25,8 @@ public final class MainController implements Initializable {
     private static final String KEY_TIME_FORMAT = "time.format";
     private static final String KEY_BUTTON_PLAY = "button.play";
     private static final String KEY_BUTTON_PAUSE = "button.pause";
-    private static final double END_TOLERANCE_SECONDS = 0.1;
+    private static final String KEY_TONE_NAME = "source.tone";
+    private static final int TONE_SAMPLE_RATE = 44_100;
 
     @FXML private VBox mainPane;
     @FXML private WaveformView waveformView;
@@ -35,15 +34,18 @@ public final class MainController implements Initializable {
     @FXML private Slider seekSlider;
     @FXML private Label timeLabel;
     @FXML private VBox sourceControls;
+    @FXML private HBox rangesContainer;
 
     private final PlaybackController controller = new PlaybackController();
-    private final PauseTransition rebuildDebounce = new PauseTransition(Duration.millis(100));
+    private final MonitorWindows monitors = new MonitorWindows();
+
+    private SourceRowsPanel sourceRows;
+    private SliderRangesPanel rangesPanel;
 
     private boolean isSeeking;
-    private boolean wasPlaying;
 
-    private final AnimationTimer timer =
-            new AnimationTimer() {
+    private final javafx.animation.AnimationTimer timer =
+            new javafx.animation.AnimationTimer() {
                 @Override
                 public void handle(final long now) {
                     tick();
@@ -52,7 +54,15 @@ public final class MainController implements Initializable {
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        buildSourceControls();
+        sourceRows =
+                new SourceRowsPanel(
+                        sourceControls,
+                        controller,
+                        monitors,
+                        this::rebuildAudioAndWaveform,
+                        mainPane);
+        rangesPanel = new SliderRangesPanel(rangesContainer, this::applyRanges);
+        rangesPanel.initDefaults(controller.session().sliderRanges());
 
         mainPane.addEventFilter(
                 KeyEvent.KEY_PRESSED,
@@ -62,17 +72,15 @@ public final class MainController implements Initializable {
                     }
                 });
 
-        final var state = controller.getState();
+        final var state = controller.state();
         seekSlider.setMin(0.0);
         seekSlider.setMax(state.durationSeconds());
         seekSlider.setOnMousePressed(_ -> isSeeking = true);
         seekSlider.setOnMouseReleased(
                 _ -> {
                     isSeeking = false;
-                    controller.seek(seekSlider.getValue());
+                    controller.session().player().seek(seekSlider.getValue());
                 });
-
-        rebuildDebounce.setOnFinished(_ -> rebuildAudioAndWaveform());
 
         timeLabel.setText(Messages.format(KEY_TIME_FORMAT, 0.0, state.durationSeconds()));
         waveformView.setSource(state.signalSource());
@@ -80,44 +88,35 @@ public final class MainController implements Initializable {
         timer.start();
     }
 
-    private void buildSourceControls() {
-        for (var index = 0; index < controller.getSettings().getSourceCount(); index++) {
-            sourceControls.getChildren().add(loadSourceRow(index));
+    private void applyRanges(final org.nstu.se.lab4.audio.mix.SliderRanges ranges) {
+        if (ranges.equals(controller.session().sliderRanges())) {
+            return;
         }
-    }
 
-    private HBox loadSourceRow(final int index) {
-        final var loader = new FXMLLoader(ResourcePaths.url(ResourcePaths.SOURCE_ROW_VIEW));
-
-        try {
-            final var row = (HBox) loader.load();
-            final var rowController = (SourceRowController) loader.getController();
-            rowController.configure(index, controller, rebuildDebounce::playFromStart);
-            return row;
-        } catch (final IOException exception) {
-            throw new IllegalStateException("Cannot load source row", exception);
-        }
+        controller.session().updateSliderRanges(ranges);
+        sourceRows.rebuild();
+        rebuildAudioAndWaveform();
     }
 
     private void rebuildAudioAndWaveform() {
-        final var state = controller.getState();
+        final var state = controller.state();
         final var position = Math.min(state.positionSeconds(), state.durationSeconds());
-        controller.rebuildAudio();
+        controller.session().rebuild();
 
-        final var rebuilt = controller.getState();
+        final var rebuilt = controller.state();
         seekSlider.setMax(rebuilt.durationSeconds());
-        controller.seek(position);
+        controller.session().player().seek(position);
         seekSlider.setValue(position);
 
         if (state.playing()) {
-            controller.play();
+            controller.session().player().play();
         }
 
         waveformView.setSource(rebuilt.signalSource());
     }
 
     private void tick() {
-        final var state = controller.getState();
+        final var state = controller.state();
         final double position;
 
         if (state.playing() && !isSeeking) {
@@ -129,27 +128,16 @@ public final class MainController implements Initializable {
 
         timeLabel.setText(Messages.format(KEY_TIME_FORMAT, position, state.durationSeconds()));
         waveformView.setPosition(position);
-
-        if (wasPlaying
-                && !state.playing()
-                && position >= state.durationSeconds() - END_TOLERANCE_SECONDS) {
-            seekSlider.setValue(state.durationSeconds());
-            timeLabel.setText(
-                    Messages.format(
-                            KEY_TIME_FORMAT, state.durationSeconds(), state.durationSeconds()));
-            waveformView.setPosition(state.durationSeconds());
-        }
-
-        wasPlaying = state.playing();
         updatePlayPauseButton();
+        controller.broadcastState();
     }
 
     @FXML
     public void togglePlayPause() {
-        if (controller.getState().playing()) {
-            controller.pause();
+        if (controller.state().playing()) {
+            controller.session().player().pause();
         } else {
-            controller.play();
+            controller.session().player().play();
         }
 
         updatePlayPauseButton();
@@ -157,24 +145,55 @@ public final class MainController implements Initializable {
 
     @FXML
     public void stop() {
-        controller.stop();
+        controller.session().player().stop();
         seekSlider.setValue(0.0);
         timeLabel.setText(
-                Messages.format(KEY_TIME_FORMAT, 0.0, controller.getState().durationSeconds()));
+                Messages.format(KEY_TIME_FORMAT, 0.0, controller.state().durationSeconds()));
         waveformView.setPosition(0.0);
         updatePlayPauseButton();
     }
 
+    @FXML
+    public void addFromFile() {
+        final var window = mainPane.getScene().getWindow();
+        final var picked = SourceFileChooser.pickAndLoad(window);
+
+        if (picked.isEmpty()) {
+            return;
+        }
+
+        controller.session().addSource(picked.get().source(), picked.get().name());
+        sourceRows.rebuild();
+        rebuildAudioAndWaveform();
+    }
+
+    @FXML
+    public void addTone() {
+        final var window = mainPane.getScene().getWindow();
+        final var spec = AddToneDialog.show(window);
+
+        if (spec.isEmpty()) {
+            return;
+        }
+
+        final var tone = spec.get();
+        final var source =
+                WaveSource.generateTone(tone.frequency(), tone.durationSeconds(), TONE_SAMPLE_RATE);
+        controller.session().addSource(source, Messages.format(KEY_TONE_NAME, tone.frequency()));
+        sourceRows.rebuild();
+        rebuildAudioAndWaveform();
+    }
+
     private void updatePlayPauseButton() {
         playPauseButton.setText(
-                controller.getState().playing()
+                controller.state().playing()
                         ? Messages.get(KEY_BUTTON_PAUSE)
                         : Messages.get(KEY_BUTTON_PLAY));
     }
 
     public void shutdown() {
         timer.stop();
-        rebuildDebounce.stop();
+        monitors.closeAll();
         controller.shutdown();
     }
 }

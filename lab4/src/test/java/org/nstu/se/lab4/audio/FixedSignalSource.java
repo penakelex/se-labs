@@ -1,5 +1,7 @@
 package org.nstu.se.lab4.audio;
 
+import org.nstu.se.lab4.audio.source.SignalSource;
+
 final class FixedSignalSource implements SignalSource {
     private final float[] samples;
     private final int sampleRate;

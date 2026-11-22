@@ -21,13 +21,16 @@ public final class SettingsController implements Initializable {
     private static final String KEY_ERROR_DECIBEL_RANGE = "error.decibelRange";
     private static final String KEY_ERROR_PERIOD = "error.period";
     private static final String KEY_ERROR_MAX_HISTORY = "error.maxHistory";
+    private static final String KEY_ERROR_STEP = "error.stepDb";
     private static final int DEBOUNCE_MILLIS = 400;
+    private static final double MIN_STEP_DB = 0.0;
 
     @FXML private TextField zeroLevelField;
     @FXML private TextField minDecibelsField;
     @FXML private TextField maxDecibelsField;
     @FXML private TextField periodField;
     @FXML private TextField maxHistoryField;
+    @FXML private TextField stepDbField;
 
     private SettingsValues currentSettings;
     private @Nullable Consumer<SettingsValues> onSettingsChanged;
@@ -42,13 +45,15 @@ public final class SettingsController implements Initializable {
                         Messages.getDouble("settings.default.minDecibels"),
                         Messages.getDouble("settings.default.maxDecibels"),
                         Messages.getInt("settings.default.period"),
-                        Messages.getInt("settings.default.maxHistory"));
+                        Messages.getInt("settings.default.maxHistory"),
+                        Messages.getDouble("settings.default.stepDb"));
 
         zeroLevelField.setText(String.valueOf(currentSettings.zeroLevelValue()));
         minDecibelsField.setText(String.valueOf(currentSettings.minDecibels()));
         maxDecibelsField.setText(String.valueOf(currentSettings.maxDecibels()));
         periodField.setText(String.valueOf(currentSettings.periodMillis()));
         maxHistoryField.setText(String.valueOf(currentSettings.maxHistorySize()));
+        stepDbField.setText(String.valueOf(currentSettings.stepDb()));
 
         debounce.setOnFinished(_ -> validateAndNotify());
 
@@ -57,6 +62,7 @@ public final class SettingsController implements Initializable {
         maxDecibelsField.textProperty().addListener((_, _, _) -> debounce.playFromStart());
         periodField.textProperty().addListener((_, _, _) -> debounce.playFromStart());
         maxHistoryField.textProperty().addListener((_, _, _) -> debounce.playFromStart());
+        stepDbField.textProperty().addListener((_, _, _) -> debounce.playFromStart());
 
         if (onSettingsChanged != null) {
             onSettingsChanged.accept(currentSettings);
@@ -90,6 +96,7 @@ public final class SettingsController implements Initializable {
         final var period = InputValidator.parseInteger(periodField, KEY_ERROR_PERIOD, true);
         final var maxHistory =
                 InputValidator.parseInteger(maxHistoryField, KEY_ERROR_MAX_HISTORY, true);
+        final var stepDb = InputValidator.parseDouble(stepDbField, KEY_ERROR_STEP);
 
         if (!isValidDecibelRange(minDb, maxDb)) {
             return null;
@@ -99,11 +106,16 @@ public final class SettingsController implements Initializable {
             return null;
         }
 
-        if (period == null || maxHistory == null) {
+        if (period == null || maxHistory == null || stepDb == null) {
             return null;
         }
 
-        return new SettingsValues(zeroLevel, minDb, maxDb, period, maxHistory);
+        if (stepDb <= MIN_STEP_DB) {
+            InputValidator.markInvalid(stepDbField, Messages.get(KEY_ERROR_STEP));
+            return null;
+        }
+
+        return new SettingsValues(zeroLevel, minDb, maxDb, period, maxHistory, stepDb);
     }
 
     private boolean isValidDecibelRange(

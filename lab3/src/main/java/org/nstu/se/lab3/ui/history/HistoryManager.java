@@ -9,6 +9,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollBar;
 
 import org.nstu.se.lab3.Messages;
+import org.nstu.se.lab3.model.DataAccumulator;
 import org.nstu.se.lab3.model.HistoryEntry;
 
 import java.util.List;
@@ -45,14 +46,21 @@ public final class HistoryManager {
                                             Messages.format(
                                                     KEY_HISTORY_ITEM,
                                                     item.identifier(),
-                                                    item.value()));
+                                                    item.value(),
+                                                    item.decibels()));
                                 }
                             }
                         });
     }
 
-    public void update(final List<HistoryEntry> historyData) {
-        historyTotalLabel.setText(Messages.format(KEY_HISTORY_TOTAL, historyData.size()));
+    public void update(final List<HistoryEntry> historyData, final DataAccumulator.Stats stats) {
+        historyTotalLabel.setText(
+                Messages.format(
+                        KEY_HISTORY_TOTAL,
+                        stats.count(),
+                        stats.min(),
+                        stats.max(),
+                        stats.average()));
 
         final var isAtBottom = isAtBottom();
 
