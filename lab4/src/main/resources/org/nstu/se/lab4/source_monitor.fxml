@@ -9,11 +9,11 @@
 <?import javafx.scene.layout.VBox?>
 <?import org.nstu.se.lab4.ui.WaveformView?>
 <?import org.nstu.se.lab4.ui.monitor.LevelMeterView?>
+
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="org.nstu.se.lab4.ui.monitor.SourceMonitorController"
       styleClass="monitor-pane">
-
     <HBox styleClass="control-row">
         <ToggleButton fx:id="graphToggle" text="%monitor.graph" selected="true"
                       styleClass="mode-toggle"/>

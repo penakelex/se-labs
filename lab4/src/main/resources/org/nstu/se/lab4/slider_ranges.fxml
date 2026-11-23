@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+
+<HBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="org.nstu.se.lab4.ui.SliderRangesController"
+      styleClass="ranges-grid" alignment="CENTER_LEFT" spacing="8.0">
+    <Label fx:id="amplitudeLabel"/>
+    <Label fx:id="amplitudeFromLabel"/>
+    <TextField fx:id="minAmplitudeField" styleClass="range-field"/>
+    <Label fx:id="amplitudeToLabel"/>
+    <TextField fx:id="maxAmplitudeField" styleClass="range-field"/>
+
+    <Label fx:id="delayLabel"/>
+    <Label fx:id="delayFromLabel"/>
+    <TextField fx:id="minDelayField" styleClass="range-field"/>
+    <Label fx:id="delayToLabel"/>
+    <TextField fx:id="maxDelayField" styleClass="range-field"/>
+</HBox>

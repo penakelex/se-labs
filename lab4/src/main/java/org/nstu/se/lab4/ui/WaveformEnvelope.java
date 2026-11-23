@@ -2,7 +2,6 @@ package org.nstu.se.lab4.ui;
 
 import org.nstu.se.lab4.audio.source.SignalSource;
 
-/** Min/max/mid amplitude envelope of a signal at a fixed bucket resolution. */
 record WaveformEnvelope(float[] minValues, float[] maxValues, float[] midValues) {
     private static final int BUCKET_COUNT = 4096;
 

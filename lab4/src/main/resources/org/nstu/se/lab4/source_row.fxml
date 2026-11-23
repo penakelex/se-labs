@@ -9,7 +9,6 @@
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="org.nstu.se.lab4.ui.SourceRowController"
       styleClass="control-row">
-
     <Label fx:id="nameLabel" styleClass="field-label"/>
 
     <Label fx:id="amplitudeLabel" styleClass="field-label"/>

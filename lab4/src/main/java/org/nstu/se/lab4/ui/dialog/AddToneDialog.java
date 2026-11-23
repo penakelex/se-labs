@@ -2,6 +2,7 @@ package org.nstu.se.lab4.ui.dialog;
 
 import javafx.application.Platform;
 import javafx.geometry.Insets;
+import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
@@ -43,12 +44,9 @@ public final class AddToneDialog {
         dialog.setTitle(Messages.get(KEY_TITLE));
 
         final var addButtonType =
-                new ButtonType(
-                        Messages.get(KEY_ADD), javafx.scene.control.ButtonBar.ButtonData.OK_DONE);
+                new ButtonType(Messages.get(KEY_ADD), ButtonBar.ButtonData.OK_DONE);
         final var cancelButtonType =
-                new ButtonType(
-                        Messages.get(KEY_CANCEL),
-                        javafx.scene.control.ButtonBar.ButtonData.CANCEL_CLOSE);
+                new ButtonType(Messages.get(KEY_CANCEL), ButtonBar.ButtonData.CANCEL_CLOSE);
         dialog.getDialogPane().getButtonTypes().addAll(addButtonType, cancelButtonType);
 
         final var addButton = dialog.getDialogPane().lookupButton(addButtonType);

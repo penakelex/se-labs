@@ -6,12 +6,14 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import org.junit.jupiter.api.Test;
 import org.nstu.se.lab4.audio.mix.SliderRanges;
 
+import java.util.List;
+
 final class SliderRangesTest {
     @Test
     void createsDefaultRanges() {
         final var ranges = SliderRanges.defaultRanges();
         assertThat(
-                        java.util.List.of(
+                        List.of(
                                 ranges.minAmplitude(),
                                 ranges.maxAmplitude(),
                                 ranges.minDelaySeconds(),
@@ -23,7 +25,7 @@ final class SliderRangesTest {
     void clampsValuesIntoRange() {
         final var ranges = new SliderRanges(0.2, 0.8, 0.5, 2.0);
         assertThat(
-                        java.util.List.of(
+                        List.of(
                                 ranges.clampAmplitude(0.0),
                                 ranges.clampAmplitude(1.0),
                                 ranges.clampDelaySeconds(0.0),

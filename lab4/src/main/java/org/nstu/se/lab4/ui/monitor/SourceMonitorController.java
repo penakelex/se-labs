@@ -1,5 +1,7 @@
 package org.nstu.se.lab4.ui.monitor;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -46,7 +48,7 @@ public final class SourceMonitorController implements Initializable, PlaybackLis
                         this::onChannelRebuilt);
     }
 
-    @edu.umd.cs.findbugs.annotations.SuppressFBWarnings(
+    @SuppressFBWarnings(
             value = "EI_EXPOSE_REP2",
             justification = "PlaybackController is intentionally shared with the monitor window")
     public void configure(final int index, final PlaybackController playbackController) {

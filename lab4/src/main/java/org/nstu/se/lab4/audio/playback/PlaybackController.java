@@ -1,5 +1,7 @@
 package org.nstu.se.lab4.audio.playback;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 import org.nstu.se.lab4.audio.event.PlaybackListener;
 import org.nstu.se.lab4.audio.event.PlaybackState;
 import org.nstu.se.lab4.audio.source.SourceMix;
@@ -23,7 +25,7 @@ public final class PlaybackController {
                 mixSession.mix());
     }
 
-    @edu.umd.cs.findbugs.annotations.SuppressFBWarnings(
+    @SuppressFBWarnings(
             value = "EI_EXPOSE_REP",
             justification = "MixSession is intentionally shared with UI controllers")
     public MixSession session() {

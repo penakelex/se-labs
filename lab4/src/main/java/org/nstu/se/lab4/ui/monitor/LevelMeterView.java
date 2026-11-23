@@ -9,6 +9,9 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.TextAlignment;
 
 import org.nstu.se.lab4.Messages;
 
@@ -135,10 +138,8 @@ public final class LevelMeterView extends HBox {
         graphics.fillRect(0, height - fillHeight, width, fillHeight);
 
         graphics.setFill(Color.web("#0f172a"));
-        graphics.setTextAlign(javafx.scene.text.TextAlignment.CENTER);
-        graphics.setFont(
-                javafx.scene.text.Font.font(
-                        FONT_FAMILY, javafx.scene.text.FontWeight.BOLD, LEVEL_FONT_SIZE));
+        graphics.setTextAlign(TextAlignment.CENTER);
+        graphics.setFont(Font.font(FONT_FAMILY, FontWeight.BOLD, LEVEL_FONT_SIZE));
         graphics.fillText(
                 Messages.format(
                         KEY_LEVEL_FORMAT,

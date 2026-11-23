@@ -7,11 +7,11 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import org.nstu.se.lab4.ui.WaveformView?>
+
 <VBox fx:id="mainPane" xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="org.nstu.se.lab4.ui.MainController"
       styleClass="main-pane" focusTraversable="true">
-
     <WaveformView fx:id="waveformView" styleClass="waveform-view" VBox.vgrow="ALWAYS"/>
 
     <HBox styleClass="control-row">

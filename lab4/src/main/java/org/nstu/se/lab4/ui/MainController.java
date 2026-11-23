@@ -1,5 +1,6 @@
 package org.nstu.se.lab4.ui;
 
+import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -43,8 +44,8 @@ public final class MainController implements Initializable {
 
     private boolean isSeeking;
 
-    private final javafx.animation.AnimationTimer timer =
-            new javafx.animation.AnimationTimer() {
+    private final AnimationTimer timer =
+            new AnimationTimer() {
                 @Override
                 public void handle(final long now) {
                     tick();

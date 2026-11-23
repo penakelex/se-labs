@@ -2,6 +2,7 @@ package org.nstu.se.lab4.audio.source;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.nio.file.Path;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -42,7 +43,7 @@ public final class WaveSource implements SignalSource {
         }
     }
 
-    public static WaveSource fromFile(final java.nio.file.Path file) {
+    public static WaveSource fromFile(final Path file) {
         try (var audio = AudioSystem.getAudioInputStream(file.toFile())) {
             return fromAudioStream(audio);
         } catch (final UnsupportedAudioFileException | IOException exception) {

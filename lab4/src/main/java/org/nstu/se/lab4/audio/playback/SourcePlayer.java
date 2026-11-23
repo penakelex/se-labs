@@ -6,7 +6,6 @@ import javax.sound.sampled.Clip;
 
 public final class SourcePlayer {
     private static final long MICROSECONDS_PER_SECOND = 1_000_000;
-    private static final double MICROSECONDS_PER_SECOND_DOUBLE = 1_000_000.0;
 
     private final Clip clip;
 
@@ -37,11 +36,11 @@ public final class SourcePlayer {
     }
 
     public double positionSeconds() {
-        return clip.getMicrosecondPosition() / MICROSECONDS_PER_SECOND_DOUBLE;
+        return (double) clip.getMicrosecondPosition() / MICROSECONDS_PER_SECOND;
     }
 
     public double durationSeconds() {
-        return clip.getMicrosecondLength() / MICROSECONDS_PER_SECOND_DOUBLE;
+        return (double) clip.getMicrosecondLength() / MICROSECONDS_PER_SECOND;
     }
 
     public boolean isPlaying() {
