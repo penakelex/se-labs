@@ -16,6 +16,9 @@ import java.util.function.Consumer;
 final class SliderRangesPanel {
     private static final int RANGES_DEBOUNCE_MILLIS = 400;
     private static final int FIELD_COLUMNS = 5;
+    private static final double CONTAINER_SPACING = 8.0;
+    private static final double CONTAINER_PADDING_TOP = 4.0;
+    private static final String KEY_FROM = "label.range.from";
     private static final String KEY_TO = "label.range.to";
     private static final String STYLE_FIELD = "range-field";
 
@@ -53,16 +56,19 @@ final class SliderRangesPanel {
         minDelayField.getStyleClass().add(STYLE_FIELD);
         maxDelayField.getStyleClass().add(STYLE_FIELD);
 
-        container.setSpacing(8);
-        container.setPadding(new Insets(4, 0, 0, 0));
+        container.setSpacing(CONTAINER_SPACING);
+        container.setPadding(new Insets(CONTAINER_PADDING_TOP, 0, 0, 0));
+        container.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
         container
                 .getChildren()
                 .addAll(
                         new Label(Messages.get("label.range.amplitude")),
+                        new Label(Messages.get(KEY_FROM)),
                         minAmplitudeField,
                         new Label(Messages.get(KEY_TO)),
                         maxAmplitudeField,
                         new Label(Messages.get("label.range.delay")),
+                        new Label(Messages.get(KEY_FROM)),
                         minDelayField,
                         new Label(Messages.get(KEY_TO)),
                         maxDelayField);

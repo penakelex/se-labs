@@ -32,7 +32,7 @@
 
     <HBox fx:id="rangesContainer"/>
 
-    <ScrollPane fitToWidth="true" styleClass="source-scroll" maxHeight="240">
+    <ScrollPane fitToWidth="true" styleClass="source-scroll" maxHeight="200">
         <VBox fx:id="sourceControls" styleClass="source-controls"/>
     </ScrollPane>
 </VBox>

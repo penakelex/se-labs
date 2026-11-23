@@ -265,6 +265,26 @@
     -fx-opacity: 0;
 }
 
+.source-scroll .scroll-bar:horizontal {
+    -fx-background-color: transparent;
+    -fx-pref-height: 10;
+}
+
+.source-scroll .scroll-bar:horizontal .thumb {
+    -fx-background-color: #c7d2fe;
+    -fx-background-radius: 5;
+}
+
+.source-scroll .scroll-bar:horizontal .thumb:hover {
+    -fx-background-color: #a5b4fc;
+}
+
+.source-scroll .scroll-bar:horizontal .increment-button,
+.source-scroll .scroll-bar:horizontal .decrement-button {
+    -fx-pref-width: 0;
+    -fx-opacity: 0;
+}
+
 .dialog-button {
     -fx-background-radius: 8;
     -fx-font-weight: 600;

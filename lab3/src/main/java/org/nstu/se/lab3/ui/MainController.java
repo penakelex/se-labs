@@ -33,6 +33,8 @@ import java.util.ResourceBundle;
 @SuppressWarnings("NullAway.Init")
 public final class MainController implements Initializable {
     private static final int HISTORY_UPDATE_RATE_MILLIS = 200;
+    private static final int TOGGLE_ROTATE_MILLIS = 200;
+    private static final double TOGGLE_ROTATE_ANGLE_DEGREES = 180.0;
 
     @FXML private SplitPane mainSplitPane;
     @FXML private VBox settingsPane;
@@ -106,7 +108,8 @@ public final class MainController implements Initializable {
     }
 
     private void setupHistoryToggle() {
-        final var rotate = new RotateTransition(Duration.millis(200), historyArrow);
+        final var rotate =
+                new RotateTransition(Duration.millis(TOGGLE_ROTATE_MILLIS), historyArrow);
         rotate.setInterpolator(javafx.animation.Interpolator.EASE_BOTH);
 
         historyToggle
@@ -115,7 +118,7 @@ public final class MainController implements Initializable {
                         (_, _, isSelected) -> {
                             rotate.stop();
                             rotate.setFromAngle(historyArrow.getRotate());
-                            rotate.setToAngle(isSelected ? 180 : 0);
+                            rotate.setToAngle(isSelected ? TOGGLE_ROTATE_ANGLE_DEGREES : 0);
                             rotate.play();
 
                             historyPane.setVisible(isSelected);

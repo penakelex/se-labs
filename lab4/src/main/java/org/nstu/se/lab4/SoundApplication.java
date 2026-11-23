@@ -13,6 +13,8 @@ import java.util.ResourceBundle;
 public final class SoundApplication extends Application {
     private static final int INITIAL_WIDTH = 900;
     private static final int INITIAL_HEIGHT = 600;
+    private static final int MIN_WIDTH = 820;
+    private static final int MIN_HEIGHT = 560;
 
     @Override
     public void start(final Stage stage) throws IOException {
@@ -28,6 +30,8 @@ public final class SoundApplication extends Application {
         stage.setOnCloseRequest(_ -> controller.shutdown());
 
         stage.setTitle(Messages.get("window.title"));
+        stage.setMinWidth(MIN_WIDTH);
+        stage.setMinHeight(MIN_HEIGHT);
         stage.setScene(scene);
         stage.show();
     }

@@ -23,12 +23,15 @@ public final class AddToneDialog {
     private static final String STYLE_BUTTON = "dialog-button";
     private static final String STYLE_BUTTON_PRIMARY = "dialog-button-primary";
     private static final String STYLE_BUTTON_SECONDARY = "dialog-button-secondary";
+    private static final String STYLE_FIELD = "range-field";
     private static final double DEFAULT_FREQUENCY = 440.0;
     private static final double DEFAULT_DURATION_SECONDS = 3.0;
     private static final double MIN_FREQUENCY = 20.0;
     private static final double MAX_FREQUENCY = 20_000.0;
     private static final double MIN_DURATION_SECONDS = 0.1;
     private static final double MAX_DURATION_SECONDS = 60.0;
+    private static final int GRID_GAP = 8;
+    private static final int GRID_PADDING = 12;
 
     public record ToneSpec(double frequency, double durationSeconds) {}
 
@@ -55,11 +58,13 @@ public final class AddToneDialog {
 
         final var frequencyField = new TextField(String.valueOf(DEFAULT_FREQUENCY));
         final var durationField = new TextField(String.valueOf(DEFAULT_DURATION_SECONDS));
+        frequencyField.getStyleClass().add(STYLE_FIELD);
+        durationField.getStyleClass().add(STYLE_FIELD);
 
         final var grid = new GridPane();
-        grid.setHgap(8);
-        grid.setVgap(8);
-        grid.setPadding(new Insets(12));
+        grid.setHgap(GRID_GAP);
+        grid.setVgap(GRID_GAP);
+        grid.setPadding(new Insets(GRID_PADDING));
         grid.addRow(0, new Label(Messages.get(KEY_FREQUENCY)), frequencyField);
         grid.addRow(1, new Label(Messages.get(KEY_DURATION)), durationField);
         dialog.getDialogPane().setContent(grid);

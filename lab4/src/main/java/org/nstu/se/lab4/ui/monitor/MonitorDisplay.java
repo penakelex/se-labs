@@ -7,7 +7,6 @@ import org.jspecify.annotations.Nullable;
 import org.nstu.se.lab4.audio.source.SignalSource;
 import org.nstu.se.lab4.ui.WaveformView;
 
-@SuppressWarnings("NullAway.Init")
 final class MonitorDisplay {
     private final ToggleButton graphToggle;
     private final WaveformView waveformView;
@@ -48,19 +47,9 @@ final class MonitorDisplay {
         waveformView.setSource(signal);
     }
 
-    float initialSample() {
-        final var signal = channelSignal;
-        return signal == null ? 0.0f : signal.getSample(0);
-    }
-
     void show(final double positionSeconds) {
         waveformView.setPosition(positionSeconds);
         meterView.setLevel(sampleAt(positionSeconds));
-    }
-
-    double durationSeconds() {
-        final var signal = channelSignal;
-        return signal == null ? 0.0 : signal.getSampleCount() / (double) signal.getSampleRate();
     }
 
     private float sampleAt(final double positionSeconds) {

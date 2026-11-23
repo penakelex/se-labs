@@ -34,9 +34,9 @@ final class MonitorChannel {
         return currentPlayer.durationSeconds();
     }
 
-    void applySettingsChanges() {
+    boolean applySettingsChanges() {
         if (channelIndex >= model.session().settings().getSourceCount()) {
-            return;
+            return false;
         }
 
         final var channel = model.session().settings().channels().get(channelIndex);
@@ -44,9 +44,12 @@ final class MonitorChannel {
                 channel.amplitude() == appliedAmplitude
                         && channel.delaySeconds() == appliedDelaySeconds;
 
-        if (!unchanged) {
-            rebuild(false);
+        if (unchanged) {
+            return false;
         }
+
+        rebuild(false);
+        return true;
     }
 
     void rebuild(final boolean createPlayer) {

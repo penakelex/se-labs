@@ -4,7 +4,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 
 import org.nstu.se.lab4.Messages;
 import org.nstu.se.lab4.ResourcePaths;
@@ -22,7 +21,7 @@ public final class MonitorWindows {
 
     private final Map<Integer, Stage> windows = new ConcurrentHashMap<>();
 
-    public void open(final int channelIndex, final PlaybackController model, final Window owner) {
+    public void open(final int channelIndex, final PlaybackController model) {
         final var existing = windows.get(channelIndex);
 
         if (existing != null) {
@@ -41,7 +40,6 @@ public final class MonitorWindows {
             monitor.configure(channelIndex, model);
 
             final var stage = new Stage();
-            stage.initOwner(owner);
             stage.setTitle(
                     Messages.format(
                             KEY_TITLE, model.session().settings().getChannelName(channelIndex)));

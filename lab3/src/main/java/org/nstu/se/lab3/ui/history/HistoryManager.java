@@ -15,6 +15,7 @@ import org.nstu.se.lab3.model.HistoryEntry;
 import java.util.List;
 
 public final class HistoryManager {
+    private static final double BOTTOM_TOLERANCE = 0.01;
     private static final String KEY_HISTORY_TOTAL = "history.total";
     private static final String KEY_HISTORY_ITEM = "history.item";
 
@@ -93,7 +94,8 @@ public final class HistoryManager {
         for (final var node : historyList.lookupAll(".scroll-bar")) {
             if (node instanceof ScrollBar scrollBar
                     && scrollBar.getOrientation() == Orientation.VERTICAL) {
-                return scrollBar.getValue() >= scrollBar.getMax() - 0.01 || scrollBar.getMax() == 0;
+                return scrollBar.getValue() >= scrollBar.getMax() - BOTTOM_TOLERANCE
+                        || scrollBar.getMax() == 0;
             }
         }
 

@@ -18,13 +18,6 @@ public final class SourceFileChooser {
 
     private SourceFileChooser() {}
 
-    public static void showError(final Window owner, final String message) {
-        final var alert = new Alert(Alert.AlertType.ERROR, message);
-        alert.initOwner(owner);
-        alert.setHeaderText(null);
-        alert.showAndWait();
-    }
-
     public static Optional<PickedSource> pickAndLoad(final Window owner) {
         final var chooser = new FileChooser();
         chooser.getExtensionFilters()

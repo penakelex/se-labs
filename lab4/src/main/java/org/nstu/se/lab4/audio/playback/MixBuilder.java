@@ -25,6 +25,10 @@ final class MixBuilder {
                                     0)));
         }
 
+        return new SourceMix(channelsFor(settings));
+    }
+
+    private static List<SourceMix.Channel> channelsFor(final MixSettings settings) {
         final var targetSampleRate = settings.channels().getFirst().source().getSampleRate();
         final var channels = new ArrayList<SourceMix.Channel>(settings.getSourceCount());
 
@@ -38,7 +42,7 @@ final class MixBuilder {
             channels.add(new SourceMix.Channel(source, channel.amplitude(), delaySamples));
         }
 
-        return new SourceMix(channels);
+        return channels;
     }
 
     static float currentSample(final SourceMix mix, final SourcePlayer player) {

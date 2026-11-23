@@ -40,7 +40,6 @@ public final class MainController implements Initializable {
     private final MonitorWindows monitors = new MonitorWindows();
 
     private SourceRowsPanel sourceRows;
-    private SliderRangesPanel rangesPanel;
 
     private boolean isSeeking;
 
@@ -60,8 +59,16 @@ public final class MainController implements Initializable {
                         controller,
                         monitors,
                         this::rebuildAudioAndWaveform,
-                        mainPane);
-        rangesPanel = new SliderRangesPanel(rangesContainer, this::applyRanges);
+                        this::onSourceStructureChanged);
+        final var rangesPanel =
+                new SliderRangesPanel(
+                        rangesContainer,
+                        ranges -> {
+                            if (!ranges.equals(controller.session().sliderRanges())) {
+                                controller.session().updateSliderRanges(ranges);
+                                onSourceStructureChanged();
+                            }
+                        });
         rangesPanel.initDefaults(controller.session().sliderRanges());
 
         mainPane.addEventFilter(
@@ -88,12 +95,7 @@ public final class MainController implements Initializable {
         timer.start();
     }
 
-    private void applyRanges(final org.nstu.se.lab4.audio.mix.SliderRanges ranges) {
-        if (ranges.equals(controller.session().sliderRanges())) {
-            return;
-        }
-
-        controller.session().updateSliderRanges(ranges);
+    private void onSourceStructureChanged() {
         sourceRows.rebuild();
         rebuildAudioAndWaveform();
     }
@@ -163,8 +165,7 @@ public final class MainController implements Initializable {
         }
 
         controller.session().addSource(picked.get().source(), picked.get().name());
-        sourceRows.rebuild();
-        rebuildAudioAndWaveform();
+        onSourceStructureChanged();
     }
 
     @FXML
@@ -180,8 +181,7 @@ public final class MainController implements Initializable {
         final var source =
                 WaveSource.generateTone(tone.frequency(), tone.durationSeconds(), TONE_SAMPLE_RATE);
         controller.session().addSource(source, Messages.format(KEY_TONE_NAME, tone.frequency()));
-        sourceRows.rebuild();
-        rebuildAudioAndWaveform();
+        onSourceStructureChanged();
     }
 
     private void updatePlayPauseButton() {

@@ -18,7 +18,7 @@ final class SourceRowsPanel {
     private final PlaybackController controller;
     private final org.nstu.se.lab4.ui.monitor.MonitorWindows monitors;
     private final Runnable rebuildRequest;
-    private final javafx.scene.layout.Pane ownerPane;
+    private final Runnable structureChangeRequest;
 
     private final PauseRebuild debounce = new PauseRebuild();
 
@@ -27,12 +27,12 @@ final class SourceRowsPanel {
             final PlaybackController controller,
             final org.nstu.se.lab4.ui.monitor.MonitorWindows monitors,
             final Runnable rebuildRequest,
-            final javafx.scene.layout.Pane ownerPane) {
+            final Runnable structureChangeRequest) {
         this.container = container;
         this.controller = controller;
         this.monitors = monitors;
         this.rebuildRequest = rebuildRequest;
-        this.ownerPane = ownerPane;
+        this.structureChangeRequest = structureChangeRequest;
         rebuild();
     }
 
@@ -56,8 +56,8 @@ final class SourceRowsPanel {
                     controller,
                     controller.session().sliderRanges(),
                     debounce::request,
-                    this::rebuild,
-                    () -> monitors.open(index, controller, ownerPane.getScene().getWindow()));
+                    structureChangeRequest,
+                    () -> monitors.open(index, controller));
             return row;
         } catch (final IOException exception) {
             throw new IllegalStateException("Cannot load source row", exception);

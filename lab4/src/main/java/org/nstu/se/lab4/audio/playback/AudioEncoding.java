@@ -12,18 +12,21 @@ public final class AudioEncoding {
     private static final int CHANNELS = 1;
     private static final boolean SIGNED = true;
     private static final boolean BIG_ENDIAN = false;
+    private static final int BYTES_PER_SAMPLE = 2;
+    private static final int BYTE_MASK = 0xFF;
+    private static final int BYTE_BITS = 8;
 
     private AudioEncoding() {}
 
     public static byte[] encode(final SignalSource source) {
         final var sampleCount = source.getSampleCount();
-        final var data = new byte[sampleCount * 2];
+        final var data = new byte[sampleCount * BYTES_PER_SAMPLE];
 
         for (var index = 0; index < sampleCount; index++) {
             final var clamped = Math.clamp(source.getSample(index), -1.0f, 1.0f);
             final var value = (short) Math.round(clamped * Short.MAX_VALUE);
-            data[index * 2] = (byte) (value & 0xFF);
-            data[index * 2 + 1] = (byte) ((value >> 8) & 0xFF);
+            data[index * BYTES_PER_SAMPLE] = (byte) (value & BYTE_MASK);
+            data[index * BYTES_PER_SAMPLE + 1] = (byte) ((value >> BYTE_BITS) & BYTE_MASK);
         }
 
         return data;

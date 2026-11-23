@@ -13,6 +13,7 @@ module org.nstu.se.sound {
             javafx.fxml;
 
     exports org.nstu.se.lab4;
+    exports org.nstu.se.lab4.audio.event;
     exports org.nstu.se.lab4.audio.mix;
     exports org.nstu.se.lab4.audio.playback;
     exports org.nstu.se.lab4.audio.source;

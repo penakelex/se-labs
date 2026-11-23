@@ -23,6 +23,16 @@ public final class LevelMeterView extends HBox {
     private static final double MIN_METER_HEIGHT = 180.0;
     private static final double METER_WIDTH = 90.0;
 
+    private static final double CLIP_ARC = 16.0;
+    private static final double HOLDER_MIN_HEIGHT = 60.0;
+    private static final double AMPLITUDE_LABEL_MIN_WIDTH = 70.0;
+    private static final double AMPLITUDE_PRECISION = 1000.0;
+    private static final double DECIBEL_PRECISION = 10.0;
+    private static final double METER_CORNER_RADIUS = 16.0;
+    private static final double LEVEL_FONT_SIZE = 12.0;
+    private static final double TEXT_MIN_TOP = 16.0;
+    private static final double TEXT_BOTTOM_OFFSET = 8.0;
+
     private static final Color LOW_COLOR = Color.web("#10b981");
     private static final Color MID_COLOR = Color.web("#f59e0b");
     private static final Color HIGH_COLOR = Color.web("#ef4444");
@@ -36,11 +46,8 @@ public final class LevelMeterView extends HBox {
     private static final String STYLE_CAPTION = "meter-caption";
     private static final String STYLE_AMPLITUDE = "meter-amplitude";
     private static final String FONT_FAMILY = "Segoe UI";
-    private static final double ZERO_RANGE = 0.0;
 
     private final Canvas canvas = new Canvas();
-    private final Label maxLabel = new Label(Messages.get(KEY_MAX_LABEL));
-    private final Label minLabel = new Label(Messages.get(KEY_MIN_LABEL));
     private final Label amplitudeLabel = new Label();
 
     private double levelDecibels = MIN_DECIBELS;
@@ -51,9 +58,12 @@ public final class LevelMeterView extends HBox {
         final var clip = new Rectangle();
         clip.widthProperty().bind(widthProperty());
         clip.heightProperty().bind(heightProperty());
-        clip.setArcWidth(16.0);
-        clip.setArcHeight(16.0);
+        clip.setArcWidth(CLIP_ARC);
+        clip.setArcHeight(CLIP_ARC);
         setClip(clip);
+
+        final var maxLabel = new Label(Messages.get(KEY_MAX_LABEL));
+        final var minLabel = new Label(Messages.get(KEY_MIN_LABEL));
 
         getStyleClass().add("level-meter");
         maxLabel.getStyleClass().add(STYLE_CAPTION);
@@ -63,7 +73,7 @@ public final class LevelMeterView extends HBox {
         minLabel.setMaxWidth(Double.MAX_VALUE);
 
         final var holder = new Pane(canvas);
-        holder.setMinHeight(60);
+        holder.setMinHeight(HOLDER_MIN_HEIGHT);
         VBox.setVgrow(holder, Priority.ALWAYS);
         canvas.widthProperty().bind(holder.widthProperty());
         canvas.heightProperty().bind(holder.heightProperty());
@@ -74,7 +84,7 @@ public final class LevelMeterView extends HBox {
         meterBox.setMinHeight(MIN_METER_HEIGHT);
         HBox.setHgrow(meterBox, Priority.NEVER);
 
-        amplitudeLabel.setMinWidth(70);
+        amplitudeLabel.setMinWidth(AMPLITUDE_LABEL_MIN_WIDTH);
         amplitudeLabel.setAlignment(Pos.CENTER_LEFT);
         HBox.setHgrow(amplitudeLabel, Priority.ALWAYS);
 
@@ -89,7 +99,8 @@ public final class LevelMeterView extends HBox {
                 Math.clamp(LOG10_FACTOR * Math.log10(magnitude), MIN_DECIBELS, MAX_DECIBELS);
         amplitudeLabel.setText(
                 Messages.format(
-                        KEY_AMPLITUDE_FORMAT, Math.round(Math.abs(sample) * 1000.0) / 1000.0));
+                        KEY_AMPLITUDE_FORMAT,
+                        Math.round(Math.abs(sample) * AMPLITUDE_PRECISION) / AMPLITUDE_PRECISION));
         draw();
     }
 
@@ -114,10 +125,11 @@ public final class LevelMeterView extends HBox {
         final var fillHeight = percentage * height;
 
         graphics.setFill(BACKGROUND_COLOR);
-        graphics.fillRoundRect(0, 0, width, height, 16, 16);
+        graphics.fillRoundRect(0, 0, width, height, METER_CORNER_RADIUS, METER_CORNER_RADIUS);
         graphics.setStroke(BORDER_COLOR);
         graphics.setLineWidth(1.0);
-        graphics.strokeRoundRect(0.5, 0.5, width - 1, height - 1, 16, 16);
+        graphics.strokeRoundRect(
+                0.5, 0.5, width - 1, height - 1, METER_CORNER_RADIUS, METER_CORNER_RADIUS);
 
         graphics.setFill(colorFor(percentage));
         graphics.fillRect(0, height - fillHeight, width, fillHeight);
@@ -125,21 +137,18 @@ public final class LevelMeterView extends HBox {
         graphics.setFill(Color.web("#0f172a"));
         graphics.setTextAlign(javafx.scene.text.TextAlignment.CENTER);
         graphics.setFont(
-                javafx.scene.text.Font.font(FONT_FAMILY, javafx.scene.text.FontWeight.BOLD, 12));
+                javafx.scene.text.Font.font(
+                        FONT_FAMILY, javafx.scene.text.FontWeight.BOLD, LEVEL_FONT_SIZE));
         graphics.fillText(
-                Messages.format(KEY_LEVEL_FORMAT, Math.round(levelDecibels * 10.0) / 10.0),
+                Messages.format(
+                        KEY_LEVEL_FORMAT,
+                        Math.round(levelDecibels * DECIBEL_PRECISION) / DECIBEL_PRECISION),
                 width / 2,
-                Math.max(16, height - fillHeight - 8));
+                Math.max(TEXT_MIN_TOP, height - fillHeight - TEXT_BOTTOM_OFFSET));
     }
 
     private double percentageOf(final double decibels) {
-        final var range = MAX_DECIBELS - MIN_DECIBELS;
-
-        if (range <= ZERO_RANGE) {
-            return 0.0;
-        }
-
-        final var raw = (decibels - MIN_DECIBELS) / range;
+        final var raw = (decibels - MIN_DECIBELS) / (MAX_DECIBELS - MIN_DECIBELS);
         return Math.clamp(raw, 0.0, 1.0);
     }
 

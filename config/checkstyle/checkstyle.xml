@@ -11,6 +11,10 @@
         <property name="fileNamePattern" value="module-info\.java$"/>
     </module>
 
+    <module name="SuppressionFilter">
+        <property name="file" value="${config_loc}/suppressions.xml"/>
+    </module>
+
     <!-- File-level checks -->
     <module name="NewlineAtEndOfFile"/>
     <module name="FileTabCharacter"/>
@@ -49,6 +53,11 @@
         <module name="SimplifyBooleanExpression"/>
         <module name="SimplifyBooleanReturn"/>
         <module name="MultipleStringLiterals"/>
+        <module name="MagicNumber">
+            <property name="ignoreNumbers" value="-1, 0, 0.0, 0.5, 1, 1.0, 2, 2.0, 100"/>
+            <property name="ignoreHashCodeMethod" value="true"/>
+            <property name="ignoreAnnotation" value="true"/>
+        </module>
 
         <!-- Modifiers and declarations -->
         <module name="ModifierOrder"/>
