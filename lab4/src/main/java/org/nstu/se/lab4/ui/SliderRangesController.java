@@ -78,7 +78,7 @@ public final class SliderRangesController {
 
     private static @Nullable Double parse(final String text) {
         try {
-            return Double.valueOf(text.trim());
+            return Double.valueOf(text.trim().replace(',', '.'));
         } catch (final NumberFormatException exception) {
             return null;
         }

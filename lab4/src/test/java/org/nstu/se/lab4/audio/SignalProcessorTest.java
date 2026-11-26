@@ -49,12 +49,11 @@ final class SignalProcessorTest {
     }
 
     @Test
-    void rejectsAmplitudeAboveMaximum() {
+    void amplifiesAboveUnityGain() {
         final var source = new FixedSignalSource(new float[] {0.4f}, SAMPLE_RATE);
+        final var processor = new SignalProcessor(source, 2.0, 0.0);
 
-        assertThatThrownBy(() -> new SignalProcessor(source, 1.1, 0.0))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining(AMPLITUDE_MESSAGE);
+        assertThat(processor.getSample(0)).isCloseTo(0.8f, within(SAMPLE_TOLERANCE));
     }
 
     @Test

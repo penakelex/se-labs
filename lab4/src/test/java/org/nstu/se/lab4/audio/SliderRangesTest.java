@@ -39,8 +39,8 @@ final class SliderRangesTest {
     }
 
     @Test
-    void tryCreateReturnsNullForAmplitudeAboveOne() {
-        assertThat(SliderRanges.tryCreate(0.0, 1.1, 0.0, 2.0)).isNull();
+    void tryCreateReturnsRangesForAmplitudeAboveOne() {
+        assertThat(SliderRanges.tryCreate(0.0, 100.0, 0.0, 2.0)).isNotNull();
     }
 
     @Test
@@ -54,8 +54,8 @@ final class SliderRangesTest {
     }
 
     @Test
-    void tryCreateReturnsNullForDelayAboveLimit() {
-        assertThat(SliderRanges.tryCreate(0.0, 1.0, 0.0, 31.0)).isNull();
+    void tryCreateReturnsRangesForLargeDelay() {
+        assertThat(SliderRanges.tryCreate(0.0, 1.0, 0.0, 120.0)).isNotNull();
     }
 
     @Test

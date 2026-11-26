@@ -6,8 +6,10 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
@@ -75,7 +77,16 @@ public final class MainController implements Initializable {
         mainPane.addEventFilter(
                 KeyEvent.KEY_PRESSED,
                 event -> {
-                    if (event.getCode() == KeyCode.ESCAPE) {
+                    final var code = event.getCode();
+
+                    if (code == KeyCode.ESCAPE || (code == KeyCode.ENTER && isTextFieldFocused())) {
+                        mainPane.requestFocus();
+                    }
+                });
+        mainPane.addEventFilter(
+                MouseEvent.MOUSE_PRESSED,
+                event -> {
+                    if (!(event.getTarget() instanceof TextField)) {
                         mainPane.requestFocus();
                     }
                 });
@@ -94,6 +105,10 @@ public final class MainController implements Initializable {
         waveformView.setSource(state.signalSource());
 
         timer.start();
+    }
+
+    private boolean isTextFieldFocused() {
+        return mainPane.getScene().getFocusOwner() instanceof TextField;
     }
 
     private void onSourceStructureChanged() {

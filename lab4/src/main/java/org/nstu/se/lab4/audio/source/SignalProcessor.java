@@ -2,7 +2,6 @@ package org.nstu.se.lab4.audio.source;
 
 public final class SignalProcessor implements SignalSource {
     private static final double MIN_AMPLITUDE = 0.0;
-    private static final double MAX_AMPLITUDE = 1.0;
     private static final double MIN_DELAY_SECONDS = 0.0;
 
     private final SignalSource source;
@@ -11,8 +10,8 @@ public final class SignalProcessor implements SignalSource {
 
     public SignalProcessor(
             final SignalSource source, final double amplitude, final double delaySeconds) {
-        if (amplitude < MIN_AMPLITUDE || amplitude > MAX_AMPLITUDE) {
-            throw new IllegalArgumentException("Amplitude must be between 0.0 and 1.0");
+        if (amplitude < MIN_AMPLITUDE) {
+            throw new IllegalArgumentException("Amplitude must be non-negative");
         }
 
         if (delaySeconds < MIN_DELAY_SECONDS) {

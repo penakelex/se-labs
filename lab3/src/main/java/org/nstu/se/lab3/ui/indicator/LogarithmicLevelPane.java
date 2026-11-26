@@ -143,6 +143,7 @@ public final class LogarithmicLevelPane extends VBox {
                 value -> {
                     final var decibels = slider.getValue();
                     accumulator.addValue(value, decibels);
+
                     if (dataListener != null) {
                         dataListener.onNextData(value);
                     }

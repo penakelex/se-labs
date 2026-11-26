@@ -55,7 +55,7 @@ public final class MainController implements Initializable {
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        SplitPane.setResizableWithParent(settingsPane, Boolean.FALSE);
+        SplitPane.setResizableWithParent(settingsPane, false);
 
         historyManager = new HistoryManager(historyList, historyTotalLabel);
 

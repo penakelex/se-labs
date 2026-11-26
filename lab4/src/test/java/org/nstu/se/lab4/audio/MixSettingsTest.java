@@ -46,12 +46,10 @@ final class MixSettingsTest {
     }
 
     @Test
-    void rejectsAmplitudeAboveMaximum() {
+    void acceptsAmplitudeAboveOne() {
         final var settings = MixSettings.createDefault();
 
-        assertThatThrownBy(() -> settings.withAmplitude(0, 1.1))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining(AMPLITUDE_MESSAGE);
+        assertThat(settings.withAmplitude(0, 1.1).getAmplitude(0)).isEqualTo(1.1);
     }
 
     @Test

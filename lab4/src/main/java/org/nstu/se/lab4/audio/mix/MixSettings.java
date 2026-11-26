@@ -9,7 +9,6 @@ import java.util.List;
 
 public record MixSettings(List<Channel> channels) {
     private static final double MIN_AMPLITUDE = 0.0;
-    private static final double MAX_AMPLITUDE = 1.0;
     private static final double MIN_DELAY_SECONDS = 0.0;
     private static final double DEFAULT_AMPLITUDE = 0.5;
     private static final double DEFAULT_DELAY_SECONDS = 0.0;
@@ -53,8 +52,8 @@ public record MixSettings(List<Channel> channels) {
     }
 
     public MixSettings withAmplitude(final int index, final double amplitude) {
-        if (amplitude < MIN_AMPLITUDE || amplitude > MAX_AMPLITUDE) {
-            throw new IllegalArgumentException("Amplitude must be between 0.0 and 1.0");
+        if (amplitude < MIN_AMPLITUDE) {
+            throw new IllegalArgumentException("Amplitude must be non-negative");
         }
 
         return replace(index, channels.get(index).withAmplitude(amplitude));
